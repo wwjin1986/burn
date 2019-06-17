@@ -1,18 +1,19 @@
 {
   "files": {
-    "main.css": "/travel/static/css/main.2cce8147.chunk.css",
-    "main.js": "/travel/static/js/main.11838085.chunk.js",
-    "main.js.map": "/travel/static/js/main.11838085.chunk.js.map",
+    "main.css": "/travel/static/css/main.ecf3bf9d.chunk.css",
+    "main.js": "/travel/static/js/main.1003680e.chunk.js",
+    "main.js.map": "/travel/static/js/main.1003680e.chunk.js.map",
     "runtime~main.js": "/travel/static/js/runtime~main.11399f7e.js",
     "runtime~main.js.map": "/travel/static/js/runtime~main.11399f7e.js.map",
-    "static/css/2.6e57c08b.chunk.css": "/travel/static/css/2.6e57c08b.chunk.css",
-    "static/js/2.41628f70.chunk.js": "/travel/static/js/2.41628f70.chunk.js",
-    "static/js/2.41628f70.chunk.js.map": "/travel/static/js/2.41628f70.chunk.js.map",
+    "static/css/2.b9e3e727.chunk.css": "/travel/static/css/2.b9e3e727.chunk.css",
+    "static/js/2.47cd74b3.chunk.js": "/travel/static/js/2.47cd74b3.chunk.js",
+    "static/js/2.47cd74b3.chunk.js.map": "/travel/static/js/2.47cd74b3.chunk.js.map",
     "index.html": "/travel/index.html",
-    "precache-manifest.942e36f4d3ae3399c1fd6fa73b970ddf.js": "/travel/precache-manifest.942e36f4d3ae3399c1fd6fa73b970ddf.js",
+    "precache-manifest.426f5f5ae84e0113478de07d727b84c7.js": "/travel/precache-manifest.426f5f5ae84e0113478de07d727b84c7.js",
     "service-worker.js": "/travel/service-worker.js",
-    "static/css/2.6e57c08b.chunk.css.map": "/travel/static/css/2.6e57c08b.chunk.css.map",
-    "static/css/main.2cce8147.chunk.css.map": "/travel/static/css/main.2cce8147.chunk.css.map",
-    "static/media/font-awesome.css": "/travel/static/media/fontawesome-webfont.fee66e71.woff"
+    "static/css/2.b9e3e727.chunk.css.map": "/travel/static/css/2.b9e3e727.chunk.css.map",
+    "static/css/main.ecf3bf9d.chunk.css.map": "/travel/static/css/main.ecf3bf9d.chunk.css.map",
+    "static/media/font-awesome.css": "/travel/static/media/fontawesome-webfont.fee66e71.woff",
+    "static/media/react-widgets.css": "/travel/static/media/rw-widgets.eceddf47.ttf"
   }
 }
