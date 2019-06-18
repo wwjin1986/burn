@@ -2,6 +2,7 @@
   "name": "burn",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://wwjin1986.github.io/burn",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
@@ -9,8 +10,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "react-widgets": "^4.4.11",
-    "homepage": "https://wwjin1986.github.io/burn"
+    "react-widgets": "^4.4.11"
   },
   "scripts": {
     "start": "react-scripts start",
