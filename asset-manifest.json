@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.e05f5096.chunk.css",
-    "main.js": "/static/js/main.6c9e123a.chunk.js",
-    "main.js.map": "/static/js/main.6c9e123a.chunk.js.map",
-    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
-    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
-    "static/css/2.b1435844.chunk.css": "/static/css/2.b1435844.chunk.css",
-    "static/js/2.a47d0150.chunk.js": "/static/js/2.a47d0150.chunk.js",
-    "static/js/2.a47d0150.chunk.js.map": "/static/js/2.a47d0150.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.e323f81a6a7dc92334384de47f11acf5.js": "/precache-manifest.e323f81a6a7dc92334384de47f11acf5.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.b1435844.chunk.css.map": "/static/css/2.b1435844.chunk.css.map",
-    "static/css/main.e05f5096.chunk.css.map": "/static/css/main.e05f5096.chunk.css.map",
-    "static/media/font-awesome.css": "/static/media/fontawesome-webfont.fee66e71.woff",
-    "static/media/react-widgets.css": "/static/media/rw-widgets.eceddf47.ttf"
+    "main.css": "/burn/static/css/main.e05f5096.chunk.css",
+    "main.js": "/burn/static/js/main.3721baf3.chunk.js",
+    "main.js.map": "/burn/static/js/main.3721baf3.chunk.js.map",
+    "runtime~main.js": "/burn/static/js/runtime~main.f64aeb5d.js",
+    "runtime~main.js.map": "/burn/static/js/runtime~main.f64aeb5d.js.map",
+    "static/css/2.7300cc66.chunk.css": "/burn/static/css/2.7300cc66.chunk.css",
+    "static/js/2.a47d0150.chunk.js": "/burn/static/js/2.a47d0150.chunk.js",
+    "static/js/2.a47d0150.chunk.js.map": "/burn/static/js/2.a47d0150.chunk.js.map",
+    "index.html": "/burn/index.html",
+    "precache-manifest.08428394229300928992fea655ac61dd.js": "/burn/precache-manifest.08428394229300928992fea655ac61dd.js",
+    "service-worker.js": "/burn/service-worker.js",
+    "static/css/2.7300cc66.chunk.css.map": "/burn/static/css/2.7300cc66.chunk.css.map",
+    "static/css/main.e05f5096.chunk.css.map": "/burn/static/css/main.e05f5096.chunk.css.map",
+    "static/media/font-awesome.css": "/burn/static/media/fontawesome-webfont.fee66e71.woff",
+    "static/media/react-widgets.css": "/burn/static/media/rw-widgets.eceddf47.ttf"
   }
 }
