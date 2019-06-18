@@ -31,3 +31,13 @@
     transform: rotate(360deg);
   }
 }
+
+label {
+  display: block;
+  position: relative;
+  padding-left: 70px; /* adjust if necessary */
+}
+label > span {
+  position: absolute;
+  left: 0;
+}
