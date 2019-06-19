@@ -11,6 +11,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.0",
     "react-scripts": "3.0.1",
+    "react-simple-editlabel": "^1.0.2",
     "react-widgets": "^4.4.11"
   },
   "scripts": {
@@ -37,6 +38,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^2.0.1"
+    "gh-pages": "^2.0.1",
+    "react-edit-inline": "^1.0.8"
   }
 }
