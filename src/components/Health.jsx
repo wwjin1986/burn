@@ -4,11 +4,14 @@ class Health extends Component {
     height: 160,
     weight: 55,
     age: 33,
-    meter: "cm"
+    meter: "cm",
+    show: "collapse"
   };
   handleSelectMeter = event => {
     this.setState({ meter: event.target.name });
     console.log(this.state.meter);
+
+    //ft/lb -> cm/kg
     if (event.target.name === "cm")
       this.setState({
         weight: Math.round(this.state.weight * 0.45359237),
@@ -19,6 +22,13 @@ class Health extends Component {
         weight: Math.round(this.state.weight * 2.20462262185),
         height: Math.round(this.state.height * 0.0328084 * 100) / 100
       });
+  };
+  handleEdit = () => {
+    //collapse div to add new weight
+    this.setState({
+      show: this.state.show === "collapse" ? "collapse show" : "collapse"
+    });
+    console.log("edit");
   };
   render() {
     return (
@@ -73,41 +83,53 @@ class Health extends Component {
             </label>
           </div>
         </div>
-        <div className="card-body">
+        <div className="card-body container-fluid">
           <div className="row">
-            <div className="col-4">Weight</div>
+            <div className="col-3 ml-5">Weight</div>
             <div className="col-7">
               {this.state.weight}
               {this.state.meter === "cm" ? "kg" : "lb"}
+
               <i
                 className="fa fa-pencil-square-o ml-2"
                 aria-hidden="true"
                 style={{ cursor: "pointer" }}
+                onClick={this.handleEdit}
               />
+
+              <div className={this.state.show} id="collapseExample">
+                <div className="card card-body">
+                  <div className="row">
+                    <div className="col-7">
+                      <input
+                        type="number"
+                        placeholder="Enter new weight"
+                        className="mr-1 mb-2"
+                      />
+                    </div>
+                    <div className="col-3">
+                      {this.state.meter === "cm" ? "kg" : "lb"}
+                    </div>
+                    <div className="col-3 ">
+                      <button className="btn btn-sm btn-outline-secondary">
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div className="row">
-            <div className="col-4">Height</div>
+            <div className="col-3 ml-5">Height</div>
             <div className="col-7">
               {this.state.height}
               {this.state.meter === "cm" ? "cm" : "ft"}
-              <i
-                className="fa fa-pencil-square-o ml-2"
-                aria-hidden="true"
-                style={{ cursor: "pointer" }}
-              />
             </div>
           </div>
           <div className="row">
-            <div className="col-4">Age</div>
-            <div className="col-7">
-              {this.state.age}
-              <i
-                className="fa fa-pencil-square-o ml-2"
-                aria-hidden="true"
-                style={{ cursor: "pointer" }}
-              />
-            </div>
+            <div className="col-3 ml-5">Age</div>
+            <div className="col-7">{this.state.age}</div>
           </div>
         </div>
 
@@ -118,16 +140,11 @@ class Health extends Component {
           <div style={{ display: "inline-block" }} />
           <div style={{ display: "inline-block" }}>
             <button
+              type="button"
               className="btn btn-sm ml-2"
               style={{ backgroundColor: "#9cd1f8", color: "white" }}
             >
-              Clear
-            </button>
-            <button
-              className="btn btn-sm ml-2"
-              style={{ backgroundColor: "#9cd1f8", color: "white" }}
-            >
-              Submit
+              Edit
             </button>
           </div>
         </div>
