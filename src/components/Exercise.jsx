@@ -167,9 +167,7 @@ class Exercise extends Component {
                 <span>
                   I did {this.state.duration} {this.state.time}{" "}
                   {this.state.value}. <br />
-                  Total calories estimated:
-                  {this.state.calorie}
-                  Calories.
+                  Total calories estimated: {this.state.calorie} Calories.
                 </span>
               )}
             </div>

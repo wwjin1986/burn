@@ -30,13 +30,19 @@ class Health extends Component {
     });
     console.log("edit");
   };
+  handleCancel = () => {
+    this.setState({ show: "collapse" });
+  };
+
   render() {
     return (
       <div
         className="card  mb-3 ml-5 mt-5"
         style={{
           display: "inline-block",
-          borderColor: "#9cd1f8"
+          borderColor: "#9cd1f8",
+          width: "500px",
+          overflow: "auto"
         }}
       >
         <div
@@ -83,12 +89,12 @@ class Health extends Component {
             </label>
           </div>
         </div>
-        <div className="card-body container-fluid">
+        <div className="card-body">
           <div className="row">
             <div className="col-3 ml-5">Weight</div>
             <div className="col-7">
               {this.state.weight}
-              {this.state.meter === "cm" ? "kg" : "lb"}
+              {this.state.meter === "cm" ? " kg" : " lb"}
 
               <i
                 className="fa fa-pencil-square-o ml-2"
@@ -100,21 +106,27 @@ class Health extends Component {
               <div className={this.state.show} id="collapseExample">
                 <div className="card card-body">
                   <div className="row">
-                    <div className="col-7">
+                    <div className="col-9">
                       <input
                         type="number"
-                        placeholder="Enter new weight"
-                        className="mr-1 mb-2"
+                        placeholder="Enter new weight here"
+                        className="mb-2"
                       />
                     </div>
                     <div className="col-3">
-                      {this.state.meter === "cm" ? "kg" : "lb"}
+                      <h7>{this.state.meter === "cm" ? " kg" : " lb"}</h7>
                     </div>
-                    <div className="col-3 ">
-                      <button className="btn btn-sm btn-outline-secondary">
-                        Add
-                      </button>
-                    </div>
+                  </div>
+                  <div className="row ">
+                    <button className="btn btn-sm ml-3 btn-outline-secondary">
+                      Add new weight
+                    </button>
+                    <button
+                      onClick={this.handleCancel}
+                      className="btn btn-sm ml-3 btn-outline-secondary"
+                    >
+                      Close
+                    </button>
                   </div>
                 </div>
               </div>
@@ -124,7 +136,7 @@ class Health extends Component {
             <div className="col-3 ml-5">Height</div>
             <div className="col-7">
               {this.state.height}
-              {this.state.meter === "cm" ? "cm" : "ft"}
+              {this.state.meter === "cm" ? " cm" : " ft"}
             </div>
           </div>
           <div className="row">
