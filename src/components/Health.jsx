@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import fetchAPI from "./commons/fetchAPI";
 class Health extends Component {
   state = {
     height: 160,
@@ -9,6 +10,7 @@ class Health extends Component {
     newWeight: 0,
     showAlert: "alert alert-success alert-dismissible fade"
   };
+
   handleSelectMeter = event => {
     this.setState({ meter: event.target.name });
     console.log(this.state.meter);
@@ -46,21 +48,13 @@ class Health extends Component {
       let localTime = new Date(
         time.getTime() - time.getTimezoneOffset() * 60 * 1000
       );
-      await fetch("http://localhost:8080/profiles/weiwei", {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, cors, *same-origin
-        headers: {
-          "Content-Type": "application/json;charset=utf-8"
-        },
-        body: JSON.stringify({
-          name: "Weiwei",
-          weight: newWeigth,
-
-          time: localTime.toJSON()
-        }),
-        cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached // body data type must match "Content-Type" header
+      let body = JSON.stringify({
+        name: "Weiwei",
+        weight: newWeigth,
+        time: localTime.toJSON()
       });
-      // parses JSON response into native Javascript objects
+
+      fetchAPI("http://localhost:8080/profiles/weiwei", "POST", body);
     }
     this.setState({
       showAlert: "alert alert-success alert-dismissible fade show"
@@ -72,6 +66,13 @@ class Health extends Component {
         }),
       10000
     );
+    let body = JSON.stringify({
+      name: "Weiwei",
+      weight: this.state.newWeight,
+      height: 160,
+      age: 33
+    });
+    fetchAPI("http://localhost:8080/profiles", "POST", body);
   };
 
   render() {
