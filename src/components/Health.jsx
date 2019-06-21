@@ -5,7 +5,8 @@ class Health extends Component {
     weight: 55,
     age: 33,
     meter: "cm",
-    show: "collapse"
+    show: "collapse",
+    newWeight: 0
   };
   handleSelectMeter = event => {
     this.setState({ meter: event.target.name });
@@ -32,6 +33,31 @@ class Health extends Component {
   };
   handleCancel = () => {
     this.setState({ show: "collapse" });
+  };
+  handleNewWeightInput = event => {
+    this.setState({ newWeight: event.target.value });
+  };
+  handleAddWeight = async () => {
+    if (this.state.newWeight > 0) {
+      console.log(this.state.newWeight);
+      let newWeigth = this.state.newWeight;
+      await fetch("http://localhost:8080/profiles", {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
+        headers: {
+          "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify({
+          name: "tm",
+          weight: newWeigth,
+          height: 160,
+          age: 32,
+          date: "2019-06-30"
+        }),
+        cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached // body data type must match "Content-Type" header
+      });
+      // parses JSON response into native Javascript objects
+    }
   };
 
   render() {
@@ -110,15 +136,20 @@ class Health extends Component {
                       <input
                         type="number"
                         placeholder="Enter new weight here"
+                        step="2.5"
                         className="mb-2"
+                        onChange={this.handleNewWeightInput}
                       />
                     </div>
                     <div className="col-3">
-                      <h7>{this.state.meter === "cm" ? " kg" : " lb"}</h7>
+                      {this.state.meter === "cm" ? " kg" : " lb"}
                     </div>
                   </div>
                   <div className="row ">
-                    <button className="btn btn-sm ml-3 btn-outline-secondary">
+                    <button
+                      className="btn btn-sm ml-3 btn-outline-secondary"
+                      onClick={this.handleAddWeight}
+                    >
                       Add new weight
                     </button>
                     <button
