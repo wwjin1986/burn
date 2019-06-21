@@ -46,7 +46,7 @@ class Health extends Component {
       let localTime = new Date(
         time.getTime() - time.getTimezoneOffset() * 60 * 1000
       );
-      await fetch("http://localhost:8080/profiles", {
+      await fetch("http://localhost:8080/profiles/weiwei", {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, cors, *same-origin
         headers: {
@@ -55,9 +55,8 @@ class Health extends Component {
         body: JSON.stringify({
           name: "Weiwei",
           weight: newWeigth,
-          height: 160,
-          age: 32,
-          date: localTime.toJSON()
+
+          time: localTime.toJSON()
         }),
         cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached // body data type must match "Content-Type" header
       });
