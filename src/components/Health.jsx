@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import fetchAPI from "./commons/fetchAPI";
+import fetchPostAPI from "./commons/fetchPostAPI";
+import fetchGetAPI from "./commons/fetchGetAPI";
 class Health extends Component {
   state = {
     height: 160,
@@ -8,8 +9,21 @@ class Health extends Component {
     meter: "cm",
     show: "collapse",
     newWeight: 0,
-    showAlert: "alert alert-success alert-dismissible fade"
+    showAlert: "alert alert-success alert-dismissible fade",
+    showInfo: ""
   };
+
+  async componentDidMount() {
+    fetchGetAPI("http://localhost:8080/profiles/Weiwei").then(data =>
+      this.setState({ weight: data.weight })
+    );
+    fetchGetAPI("http://localhost:8080/profiles/Weiwei").then(data =>
+      this.setState({ height: data.height })
+    );
+    fetchGetAPI("http://localhost:8080/profiles/Weiwei").then(data =>
+      this.setState({ age: data.age })
+    );
+  }
 
   handleSelectMeter = event => {
     this.setState({ meter: event.target.name });
@@ -36,6 +50,9 @@ class Health extends Component {
   };
   handleCancel = () => {
     this.setState({ show: "collapse" });
+    fetchGetAPI("http://localhost:8080/profiles/Weiwei").then(data =>
+      this.setState({ newWeight: data.weight })
+    );
   };
   handleNewWeightInput = event => {
     this.setState({ newWeight: event.target.value });
@@ -48,13 +65,15 @@ class Health extends Component {
       let localTime = new Date(
         time.getTime() - time.getTimezoneOffset() * 60 * 1000
       );
+
+      //update weight records
       let body = JSON.stringify({
         name: "Weiwei",
         weight: newWeigth,
         time: localTime.toJSON()
       });
 
-      fetchAPI("http://localhost:8080/profiles/weiwei", "POST", body);
+      fetchPostAPI("http://localhost:8080/profiles/Weiwei", "POST", body);
     }
     this.setState({
       showAlert: "alert alert-success alert-dismissible fade show"
@@ -66,22 +85,50 @@ class Health extends Component {
         }),
       10000
     );
+
+    // //get the most recent weight
+    // let res = fetchGetAPI("http://localhost:8080/profiles/Weiwei");
+    // res.then(data => this.setState({ weight: data.weight }));
+
+    //update profile
     let body = JSON.stringify({
       name: "Weiwei",
       weight: this.state.newWeight,
       height: 160,
       age: 33
     });
-    fetchAPI("http://localhost:8080/profiles", "POST", body);
+    fetchPostAPI("http://localhost:8080/profiles", "POST", body);
+
+    //update alert infomation
+    if (this.state.newWeight > this.state.weight) {
+      this.setState({
+        showInfo:
+          "Succeed! Your new weight is " +
+          this.state.newWeight +
+          ". You gained " +
+          (this.state.newWeight - this.state.weight)
+      });
+    } else {
+      this.setState({
+        showInfo:
+          "Succeed! Your new weight is " +
+          this.state.newWeight +
+          ". You lost " +
+          (this.state.weight - this.state.newWeight)
+      });
+    }
+    // this.setState({showInfo:"Succeed! Your new weight is "+{this.state.newWeight}+". You"+
+    // {this.state.newWeight > this.state.weight ? " gain " : " lose "}+
+    // {Math.abs(this.state.weight - this.state.newWeight)}});
+
+    this.setState({ weight: this.state.newWeight });
   };
 
   render() {
     return (
       <React.Fragment>
         <div className={this.state.showAlert} role="alert">
-          Succeed! Your new weight is {this.state.newWeight}. You{" "}
-          {this.state.newWeight > this.state.weight ? " gain " : " lose "}
-          {Math.abs(this.state.weight - this.state.newWeight)}
+          {this.state.showInfo}
           <button
             type="button"
             className="close"

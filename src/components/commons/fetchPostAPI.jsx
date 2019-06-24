@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-const fetchAPI = async (url, method, body) => {
+const fetchPostAPI = async (url, method, body) => {
   await fetch(url, {
     method: method, // *GET, POST, PUT, DELETE, etc.
     mode: "cors", // no-cors, cors, *same-origin
@@ -11,4 +11,4 @@ const fetchAPI = async (url, method, body) => {
   });
 };
 
-export default fetchAPI;
+export default fetchPostAPI;
