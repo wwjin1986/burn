@@ -50,9 +50,6 @@ class Health extends Component {
   };
   handleCancel = () => {
     this.setState({ show: "collapse" });
-    fetchGetAPI("http://localhost:8080/profiles/Weiwei").then(data =>
-      this.setState({ newWeight: data.weight })
-    );
   };
   handleNewWeightInput = event => {
     this.setState({ newWeight: event.target.value });
