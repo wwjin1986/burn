@@ -6,7 +6,7 @@ class Health extends Component {
     height: 160,
     weight: 55,
     age: 33,
-    meter: "cm",
+    unit: "kg",
     show: "collapse",
     newWeight: 0,
     showAlert: "alert alert-success alert-dismissible fade",
@@ -26,11 +26,10 @@ class Health extends Component {
   }
 
   handleSelectMeter = event => {
-    this.setState({ meter: event.target.name });
-    console.log(this.state.meter);
+    this.setState({ unit: event.target.name });
 
-    //ft/lb -> cm/kg
-    if (event.target.name === "cm")
+    //lb/ft -> kg/cm
+    if (event.target.name === "kg")
       this.setState({
         weight: Math.round(this.state.weight * 0.45359237),
         height: Math.round(this.state.height * 30.48 * 10) / 10
@@ -56,69 +55,80 @@ class Health extends Component {
   };
   handleAddWeight = async () => {
     if (this.state.newWeight > 0) {
-      console.log(this.state.newWeight);
-      let newWeigth = this.state.newWeight;
+      let newWeight = this.state.newWeight;
       let time = new Date();
       let localTime = new Date(
         time.getTime() - time.getTimezoneOffset() * 60 * 1000
       );
 
-      //update weight records
+      //update weight records,convert to kg first. Weights stored in unit kg
+      if (this.state.unit === "lb")
+        newWeight = Math.round(this.state.newWeight * 0.45359237);
+
       let body = JSON.stringify({
         name: "Weiwei",
-        weight: newWeigth,
+        weight: newWeight,
         time: localTime.toJSON()
       });
 
       fetchPostAPI("http://localhost:8080/profiles/Weiwei", "POST", body);
-    }
-    this.setState({
-      showAlert: "alert alert-success alert-dismissible fade show"
-    });
-    setTimeout(
-      () =>
+
+      this.setState({
+        showAlert: "alert alert-success alert-dismissible fade show"
+      });
+      setTimeout(
+        () =>
+          this.setState({
+            showAlert: "alert alert-success alert-dismissible fade"
+          }),
+        10000
+      );
+
+      // //get the most recent weight
+      // let res = fetchGetAPI("http://localhost:8080/profiles/Weiwei");
+      // res.then(data => this.setState({ weight: data.weight }));
+
+      //update profile
+      let body2 = JSON.stringify({
+        name: "Weiwei",
+        weight: newWeight,
+        height: 160,
+        age: 33
+      });
+      fetchPostAPI("http://localhost:8080/profiles", "POST", body2);
+
+      //update alert infomation
+      if (this.state.newWeight > this.state.weight) {
         this.setState({
-          showAlert: "alert alert-success alert-dismissible fade"
-        }),
-      10000
-    );
+          showInfo:
+            "Succeed! Your new weight is " +
+            this.state.newWeight +
+            " " +
+            this.state.unit +
+            ". You gained " +
+            (this.state.newWeight - this.state.weight) +
+            " " +
+            this.state.unit
+        });
+      } else {
+        this.setState({
+          showInfo:
+            "Succeed! Your new weight is " +
+            this.state.newWeight +
+            " " +
+            this.state.unit +
+            ". You lost " +
+            (this.state.weight - this.state.newWeight) +
+            " " +
+            this.state.unit
+        });
+      }
+      // this.setState({showInfo:"Succeed! Your new weight is "+{this.state.newWeight}+". You"+
+      // {this.state.newWeight > this.state.weight ? " gain " : " lose "}+
+      // {Math.abs(this.state.weight - this.state.newWeight)}});
 
-    // //get the most recent weight
-    // let res = fetchGetAPI("http://localhost:8080/profiles/Weiwei");
-    // res.then(data => this.setState({ weight: data.weight }));
-
-    //update profile
-    let body = JSON.stringify({
-      name: "Weiwei",
-      weight: this.state.newWeight,
-      height: 160,
-      age: 33
-    });
-    fetchPostAPI("http://localhost:8080/profiles", "POST", body);
-
-    //update alert infomation
-    if (this.state.newWeight > this.state.weight) {
-      this.setState({
-        showInfo:
-          "Succeed! Your new weight is " +
-          this.state.newWeight +
-          ". You gained " +
-          (this.state.newWeight - this.state.weight)
-      });
-    } else {
-      this.setState({
-        showInfo:
-          "Succeed! Your new weight is " +
-          this.state.newWeight +
-          ". You lost " +
-          (this.state.weight - this.state.newWeight)
-      });
+      this.setState({ weight: this.state.newWeight });
     }
-    // this.setState({showInfo:"Succeed! Your new weight is "+{this.state.newWeight}+". You"+
-    // {this.state.newWeight > this.state.weight ? " gain " : " lose "}+
-    // {Math.abs(this.state.weight - this.state.newWeight)}});
-
-    this.setState({ weight: this.state.newWeight });
   };
 
   render() {
@@ -163,30 +173,30 @@ class Health extends Component {
             >
               <label
                 className={
-                  this.state.meter === "cm"
+                  this.state.unit === "kg"
                     ? "btn btn-sm btn-outline-secondary active"
                     : "btn btn-sm btn-outline-secondary"
                 }
               >
                 <input
                   type="radio"
-                  name="cm"
-                  checked={this.state.meter === "cm"}
+                  name="kg"
+                  checked={this.state.unit === "kg"}
                   onChange={this.handleSelectMeter}
                 />
                 cm/kg
               </label>
               <label
                 className={
-                  this.state.meter === "ft"
+                  this.state.unit === "lb"
                     ? "btn btn-sm btn-outline-secondary active"
                     : "btn btn-sm btn-outline-secondary"
                 }
               >
                 <input
                   type="radio"
-                  name="ft"
-                  checked={this.state.meter === "ft"}
+                  name="lb"
+                  checked={this.state.unit === "lb"}
                   onChange={this.handleSelectMeter}
                 />
                 ft/lb
@@ -198,7 +208,7 @@ class Health extends Component {
               <div className="col-3 ml-5">Weight</div>
               <div className="col-7">
                 {this.state.weight}
-                {this.state.meter === "cm" ? " kg" : " lb"}
+                {this.state.unit === "kg" ? " kg" : " lb"}
 
                 <i
                   className="fa fa-pencil-square-o ml-2"
@@ -220,7 +230,7 @@ class Health extends Component {
                         />
                       </div>
                       <div className="col-3">
-                        {this.state.meter === "cm" ? " kg" : " lb"}
+                        {this.state.unit === "kg" ? " kg" : " lb"}
                       </div>
                     </div>
                     <div className="row ">
@@ -245,7 +255,7 @@ class Health extends Component {
               <div className="col-3 ml-5">Height</div>
               <div className="col-7">
                 {this.state.height}
-                {this.state.meter === "cm" ? " cm" : " ft"}
+                {this.state.unit === "kg" ? "cm" : "ft"}
               </div>
             </div>
             <div className="row">
