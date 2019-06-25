@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 const fetchGetAPI = async url => {
   let res = await fetch(url, {
     method: "GET", // *GET, POST, PUT, DELETE, etc.

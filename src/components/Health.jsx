@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import fetchPostAPI from "./commons/fetchPostAPI";
 import fetchGetAPI from "./commons/fetchGetAPI";
+import config from "./config.json";
+
 class Health extends Component {
   state = {
     height: 160,
@@ -10,18 +12,22 @@ class Health extends Component {
     show: "collapse",
     newWeight: 0,
     showAlert: "alert alert-success alert-dismissible fade",
-    showInfo: ""
+    showInfo: "",
+    weights: []
   };
 
   async componentDidMount() {
-    fetchGetAPI("http://localhost:8080/profiles/Weiwei").then(data =>
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
       this.setState({ weight: data.weight })
     );
-    fetchGetAPI("http://localhost:8080/profiles/Weiwei").then(data =>
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
       this.setState({ height: data.height })
     );
-    fetchGetAPI("http://localhost:8080/profiles/Weiwei").then(data =>
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
       this.setState({ age: data.age })
+    );
+    fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
+      this.setState({ weights: data })
     );
   }
 
@@ -71,7 +77,7 @@ class Health extends Component {
         time: localTime.toJSON()
       });
 
-      fetchPostAPI("http://localhost:8080/profiles/Weiwei", "POST", body);
+      fetchPostAPI(config.apiEndPoint + "/profiles/Weiwei", "POST", body);
 
       this.setState({
         showAlert: "alert alert-success alert-dismissible fade show"
@@ -95,7 +101,7 @@ class Health extends Component {
         height: 160,
         age: 33
       });
-      fetchPostAPI("http://localhost:8080/profiles", "POST", body2);
+      fetchPostAPI(config.apiEndPoint + "/profiles", "POST", body2);
 
       //update alert infomation
       if (this.state.newWeight > this.state.weight) {
@@ -129,6 +135,11 @@ class Health extends Component {
 
       this.setState({ weight: this.state.newWeight });
     }
+  };
+
+  handleDelete = event => {
+    //currentTarget the target that listens to event which is button instead of font awesome
+    console.log(event.currentTarget.name);
   };
 
   render() {
@@ -279,6 +290,48 @@ class Health extends Component {
               </button>
             </div>
           </div>
+        </div>
+        <div
+          name="show records"
+          style={{
+            width: "500px",
+            overflow: "auto",
+            marginLeft: 50
+          }}
+        >
+          <table className="table  table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Time</th>
+                <th scope="col">Weight</th>
+                <th scope="col">BMI</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.weights.map(record => (
+                <tr key={record.time}>
+                  <td>{record.time}</td>
+                  <td>{record.weight} Kg</td>
+                  <td>22</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-secondary"
+                      name={record.time}
+                      onClick={this.handleDelete}
+                    >
+                      <i
+                        className="fa fa-trash-o"
+                        aria-hidden="true"
+                        name={record.time}
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </React.Fragment>
     );

@@ -41,3 +41,10 @@ label > span {
   position: absolute;
   left: 0;
 }
+
+.table td {
+  border: #9cd1f8 solid 1px !important;
+}
+.table th {
+  border: #9cd1f8 solid 1px !important;
+}

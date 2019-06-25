@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import DropdownList from "react-widgets/lib/DropdownList";
 import { SelectList } from "react-widgets";
 
 class Exercise extends Component {
@@ -50,7 +49,6 @@ class Exercise extends Component {
         duration = 60 * duration;
       }
       let query = value + " " + duration + " " + "minutes";
-      console.log(query);
       this.fetchCalorie(query);
     }
     //call back function to get the updated value for console
