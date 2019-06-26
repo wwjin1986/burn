@@ -3,7 +3,16 @@ import fetchPostAPI from "./commons/fetchPostAPI";
 import fetchGetAPI from "./commons/fetchGetAPI";
 import config from "./config.json";
 import fetchDeleteAPI from "./commons/fetchDeleteAPI";
-
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Label,
+  Legend
+} from "recharts";
 class Health extends Component {
   state = {
     height: 160,
@@ -30,17 +39,6 @@ class Health extends Component {
     fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
       this.setState({ weights: data })
     );
-  }
-  async componentDidUpdate(prevProps, prevState) {
-    // console.log(this.state.weight);
-    // console.log(prevState.weight);
-    // if (prevState.weight != this.state.weight) {
-    //   // fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
-    //   //   this.setState({ weights: data })
-    //   // );
-    //   console.log(this.state.weights);
-    //   console.log(prevState.weights);
-    // }
   }
 
   handleSelectMeter = event => {
@@ -146,10 +144,12 @@ class Health extends Component {
       // {Math.abs(this.state.weight - this.state.newWeight)}});
 
       this.setState({ weight: this.state.newWeight });
-      fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
-        this.setState({ weights: data })
-      );
-      console.log(this.state.weights);
+      let records = fetchGetAPI(
+        config.apiEndPoint + "/profiles/weiwei/weights"
+      ).then(data => {
+        return data;
+      });
+      records.then(data => this.setState({ weights: data }));
     }
   };
 
@@ -159,9 +159,13 @@ class Health extends Component {
     fetchDeleteAPI(
       config.apiEndPoint + "/profiles/Weiwei/" + event.currentTarget.name
     );
-    fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
-      this.setState({ weights: data })
-    );
+    let records = fetchGetAPI(
+      config.apiEndPoint + "/profiles/weiwei/weights"
+    ).then(data => {
+      return data;
+    });
+    console.log(records);
+    records.then(data => this.setState({ weights: data }));
     console.log(this.state.weights);
   };
 
@@ -187,10 +191,8 @@ class Health extends Component {
         <div
           className="card  mb-3 ml-5 "
           style={{
-            display: "inline-block",
             borderColor: "#9cd1f8",
-            width: "500px",
-            overflow: "auto"
+            width: "40%"
           }}
         >
           <div
@@ -314,43 +316,61 @@ class Health extends Component {
             </div>
           </div>
         </div>
-        <div
-          name="show records"
-          style={{
-            width: "500px",
-            overflow: "auto",
-            marginLeft: 50
-          }}
-        >
-          <table className="table  table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Time</th>
-                <th scope="col">Weight</th>
-                <th scope="col">BMI</th>
-                <th scope="col">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.weights.map(record => (
-                <tr key={record.id}>
-                  <td>{record.time}</td>
-                  <td>{record.weight} Kg</td>
-                  <td>22</td>
-                  <td>
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-secondary"
-                      name={record.id}
-                      onClick={this.handleDelete}
-                    >
-                      <i className="fa fa-trash-o" aria-hidden="true" />
-                    </button>
-                  </td>
+        <div>
+          <div name="show records" id="left">
+            <table className="table  table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">No.</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Weight</th>
+                  <th scope="col">BMI</th>
+                  <th scope="col">Delete</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {this.state.weights.map(record => (
+                  <tr key={record.id}>
+                    <td>{record.id}</td>
+                    <td>{record.time}</td>
+                    <td>{record.weight} Kg</td>
+                    <td>22</td>
+                    <td>
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-secondary"
+                        name={record.id}
+                        onClick={this.handleDelete}
+                      >
+                        <i className="fa fa-trash-o" aria-hidden="true" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div id="right">
+            <LineChart width={500} height={300} data={this.state.weights}>
+              <XAxis dataKey="id">
+                <Label value="Date" offset={0} position="insideBottom" />
+              </XAxis>
+              <YAxis
+                dataKey="weight"
+                label={{ value: "weight", angle: -90, position: "insideLeft" }}
+              />
+              <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+              <Legend verticalAlign="top" height={36} />
+
+              <Line
+                name="weight records"
+                type="monotone"
+                dataKey="weight"
+                stroke="#82ca9d"
+              />
+              <Tooltip />
+            </LineChart>
+          </div>
         </div>
       </React.Fragment>
     );

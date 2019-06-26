@@ -48,3 +48,15 @@ label > span {
 .table th {
   border: #9cd1f8 solid 1px !important;
 }
+
+#left {
+  margin-left: 50px;
+  width: 40%;
+  display: inline-block;
+  float: left;
+}
+#right {
+  margin-left: 10px;
+  width: 40%;
+  display: inline-block;
+}
