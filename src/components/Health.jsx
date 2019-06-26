@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import fetchPostAPI from "./commons/fetchPostAPI";
 import fetchGetAPI from "./commons/fetchGetAPI";
 import config from "./config.json";
+import fetchDeleteAPI from "./commons/fetchDeleteAPI";
 
 class Health extends Component {
   state = {
@@ -29,6 +30,17 @@ class Health extends Component {
     fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
       this.setState({ weights: data })
     );
+  }
+  async componentDidUpdate(prevProps, prevState) {
+    // console.log(this.state.weight);
+    // console.log(prevState.weight);
+    // if (prevState.weight != this.state.weight) {
+    //   // fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
+    //   //   this.setState({ weights: data })
+    //   // );
+    //   console.log(this.state.weights);
+    //   console.log(prevState.weights);
+    // }
   }
 
   handleSelectMeter = event => {
@@ -134,12 +146,23 @@ class Health extends Component {
       // {Math.abs(this.state.weight - this.state.newWeight)}});
 
       this.setState({ weight: this.state.newWeight });
+      fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
+        this.setState({ weights: data })
+      );
+      console.log(this.state.weights);
     }
   };
 
-  handleDelete = event => {
+  handleDelete = async event => {
     //currentTarget the target that listens to event which is button instead of font awesome
     console.log(event.currentTarget.name);
+    fetchDeleteAPI(
+      config.apiEndPoint + "/profiles/Weiwei/" + event.currentTarget.name
+    );
+    fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
+      this.setState({ weights: data })
+    );
+    console.log(this.state.weights);
   };
 
   render() {
@@ -310,7 +333,7 @@ class Health extends Component {
             </thead>
             <tbody>
               {this.state.weights.map(record => (
-                <tr key={record.time}>
+                <tr key={record.id}>
                   <td>{record.time}</td>
                   <td>{record.weight} Kg</td>
                   <td>22</td>
@@ -318,14 +341,10 @@ class Health extends Component {
                     <button
                       type="button"
                       className="btn btn-sm btn-outline-secondary"
-                      name={record.time}
+                      name={record.id}
                       onClick={this.handleDelete}
                     >
-                      <i
-                        className="fa fa-trash-o"
-                        aria-hidden="true"
-                        name={record.time}
-                      />
+                      <i className="fa fa-trash-o" aria-hidden="true" />
                     </button>
                   </td>
                 </tr>
