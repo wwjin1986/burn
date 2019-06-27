@@ -13,6 +13,7 @@ import {
   Label,
   Legend
 } from "recharts";
+
 class Health extends Component {
   state = {
     height: 160,
@@ -61,7 +62,6 @@ class Health extends Component {
     this.setState({
       show: this.state.show === "collapse" ? "collapse show" : "collapse"
     });
-    console.log("edit");
   };
   handleCancel = () => {
     this.setState({ show: "collapse" });
@@ -73,9 +73,7 @@ class Health extends Component {
     if (this.state.newWeight > 0) {
       let newWeight = this.state.newWeight;
       let time = new Date();
-      let localTime = new Date(
-        time.getTime() - time.getTimezoneOffset() * 60 * 1000
-      );
+      console.log(time);
 
       //update weight records,convert to kg first. Weights stored in unit kg
       if (this.state.unit === "lb")
@@ -84,25 +82,19 @@ class Health extends Component {
       let body = JSON.stringify({
         name: "Weiwei",
         weight: newWeight,
-        time: localTime.toJSON()
+        time: time.toLocaleString()
       });
 
-      fetchPostAPI(config.apiEndPoint + "/profiles/Weiwei", "POST", body);
-
-      this.setState({
-        showAlert: "alert alert-success alert-dismissible fade show"
-      });
-      setTimeout(
-        () =>
+      await fetchPostAPI(config.apiEndPoint + "/profiles/Weiwei", "POST", body);
+      fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(
+        data => {
           this.setState({
-            showAlert: "alert alert-success alert-dismissible fade"
-          }),
-        10000
+            weights: data,
+            showAlert: "alert alert-success alert-dismissible fade show"
+          });
+          console.log(data);
+        }
       );
-
-      // //get the most recent weight
-      // let res = fetchGetAPI("http://localhost:8080/profiles/Weiwei");
-      // res.then(data => this.setState({ weight: data.weight }));
 
       //update profile
       let body2 = JSON.stringify({
@@ -139,24 +131,15 @@ class Health extends Component {
             this.state.unit
         });
       }
-      // this.setState({showInfo:"Succeed! Your new weight is "+{this.state.newWeight}+". You"+
-      // {this.state.newWeight > this.state.weight ? " gain " : " lose "}+
-      // {Math.abs(this.state.weight - this.state.newWeight)}});
 
       this.setState({ weight: this.state.newWeight });
-      let records = fetchGetAPI(
-        config.apiEndPoint + "/profiles/weiwei/weights"
-      ).then(data => {
-        return data;
-      });
-      records.then(data => this.setState({ weights: data }));
     }
   };
 
   handleDelete = async event => {
     //currentTarget the target that listens to event which is button instead of font awesome
     console.log(event.currentTarget.name);
-    fetchDeleteAPI(
+    await fetchDeleteAPI(
       config.apiEndPoint + "/profiles/Weiwei/" + event.currentTarget.name
     );
     let records = fetchGetAPI(
@@ -352,7 +335,7 @@ class Health extends Component {
           </div>
           <div id="right">
             <LineChart width={500} height={300} data={this.state.weights}>
-              <XAxis dataKey="id">
+              <XAxis dataKey="time">
                 <Label value="Date" offset={0} position="insideBottom" />
               </XAxis>
               <YAxis
