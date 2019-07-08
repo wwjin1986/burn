@@ -138,7 +138,6 @@ class Health extends Component {
 
   handleDelete = async event => {
     //currentTarget the target that listens to event which is button instead of font awesome
-    console.log(event.currentTarget.name);
     await fetchDeleteAPI(
       config.apiEndPoint + "/profiles/Weiwei/" + event.currentTarget.name
     );
@@ -147,9 +146,7 @@ class Health extends Component {
     ).then(data => {
       return data;
     });
-    console.log(records);
     records.then(data => this.setState({ weights: data }));
-    console.log(this.state.weights);
   };
 
   render() {
@@ -304,7 +301,6 @@ class Health extends Component {
             <table className="table  table-hover">
               <thead>
                 <tr>
-                  <th scope="col">No.</th>
                   <th scope="col">Time</th>
                   <th scope="col">Weight</th>
                   <th scope="col">BMI</th>
@@ -314,10 +310,15 @@ class Health extends Component {
               <tbody>
                 {this.state.weights.map(record => (
                   <tr key={record.id}>
-                    <td>{record.id}</td>
                     <td>{record.time}</td>
                     <td>{record.weight} Kg</td>
-                    <td>22</td>
+                    <td>
+                      {Math.round(
+                        (record.weight * 100000) /
+                          this.state.height /
+                          this.state.height
+                      ) / 10}
+                    </td>
                     <td>
                       <button
                         type="button"
@@ -351,6 +352,7 @@ class Health extends Component {
                 dataKey="weight"
                 stroke="#82ca9d"
               />
+
               <Tooltip />
             </LineChart>
           </div>

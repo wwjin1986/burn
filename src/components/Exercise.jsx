@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { SelectList } from "react-widgets";
-
+import fetchPostAPI from "./commons/fetchPostAPI";
+import fetchGetAPI from "./commons/fetchGetAPI";
+import config from "./config.json";
+import fetchDeleteAPI from "./commons/fetchDeleteAPI";
 class Exercise extends Component {
   state = {
     exercise: "run",
@@ -42,7 +45,7 @@ class Exercise extends Component {
       }); // parses JSON response into native Javascript objects
   };
   handleSelectExercise(value) {
-    this.setState({ value: value }, () => console.log(this.state.value));
+    this.setState({ value: value });
     if (this.state.duration > 0) {
       let duration = this.state.duration;
       if (this.state.time === "hours") {
@@ -62,22 +65,30 @@ class Exercise extends Component {
       }
 
       let query = this.state.value + " " + duration + " " + "minutes";
-      console.log(query);
       this.fetchCalorie(query);
     }
   };
 
   handleTimeChange = async event => {
-    this.setState({ duration: event.target.value }, () =>
-      console.log(this.state.duration)
-    );
+    this.setState({ duration: event.target.value });
     let duration = event.target.value;
     if (this.state.time === "hours") {
       duration = 60 * event.target.value;
     }
     let query = this.state.value + " " + duration + " " + "minutes";
-    console.log(query);
     this.fetchCalorie(query);
+  };
+
+  handleSubmit = async () => {
+    let time = new Date();
+    let workout = this.state.value;
+    let calorieBurned = this.state.calorie;
+    let body = JSON.stringify({
+      time: time.toLocaleString(),
+      calorieBurned: calorieBurned,
+      workout: workout
+    });
+    await fetchPostAPI(config.apiEndPoint + "/calorie/", "POST", body);
   };
   render() {
     //let { DropdownList } = ReactWidgets;
@@ -179,6 +190,7 @@ class Exercise extends Component {
                 type="button"
                 className="btn btn-sm ml-2"
                 style={{ backgroundColor: "#9cd1f8", color: "white" }}
+                onClick={this.handleSubmit}
               >
                 Submit
               </button>
