@@ -10,10 +10,20 @@ class Exercise extends Component {
     calorie: 10,
     value: "running",
     time: "minutes",
-    duration: 0
+    duration: 0,
+    todayTotal: 0,
+    records: [],
+    dailyGoal: 300
   };
   async componentDidMount() {
-    console.log(this.state.exercise);
+    this.setState({
+      todayTotal: await fetchGetAPI(
+        config.apiEndPoint + "/calories/2019-7-10/total"
+      )
+    });
+    this.setState({
+      records: await fetchGetAPI(config.apiEndPoint + "/calories/2019-7-10")
+    });
   }
   fetchCalorie = async query => {
     await fetch("https://trackapi.nutritionix.com/v2/natural/exercise", {
@@ -81,18 +91,25 @@ class Exercise extends Component {
 
   handleSubmit = async () => {
     let time = new Date();
+    //date in format "2019-7-9"
+    let date =
+      time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
     let workout = this.state.value;
     let calorieBurned = this.state.calorie;
     let body = JSON.stringify({
       time: time.toLocaleString(),
       calorieBurned: calorieBurned,
-      workout: workout
+      workout: workout,
+      date: "2019-7-10"
     });
     await fetchPostAPI(config.apiEndPoint + "/calorie/", "POST", body);
+    this.setState({
+      todayTotal: await fetchGetAPI(
+        config.apiEndPoint + "/calories/2019-7-10/total"
+      )
+    });
   };
   render() {
-    //let { DropdownList } = ReactWidgets;
-
     const colors = [
       "running",
       "walking",
@@ -106,8 +123,63 @@ class Exercise extends Component {
         <div
           className="card  mb-3 ml-5 mt-5"
           style={{
-            display: "inline-block",
-            borderColor: "#9cd1f8"
+            borderColor: "#9cd1f8",
+            display: "inline-block"
+          }}
+        >
+          <div
+            className="card-header bg-transparent"
+            style={{ borderColor: "#9cd1f8" }}
+          >
+            <h5>Today's Workout</h5>
+          </div>
+          <div className="card-body ">
+            {" "}
+            <span>{this.state.todayTotal} Caloreis Burned</span>
+            <div className="progress">
+              <div
+                className="progress-bar progress-bar-striped"
+                role="progressbar"
+                style={{
+                  width:
+                    this.state.todayTotal / this.state.dailyGoal >= 1
+                      ? "100%"
+                      : Math.round(
+                          (this.state.todayTotal / this.state.dailyGoal) * 100
+                        ) + "%"
+                }}
+                aria-valuenow={this.state.todayTotal}
+                aria-valuemin="0"
+                aria-valuemax={this.state.dailyGoal}
+              >
+                {this.state.todayTotal / this.state.dailyGoal >= 1
+                  ? "100%"
+                  : Math.round(
+                      (this.state.todayTotal / this.state.dailyGoal) * 100
+                    ) + " %"}
+              </div>
+            </div>
+          </div>
+          <div
+            className="card-footer bg-transparent"
+            style={{ borderColor: "#9cd1f8" }}
+          >
+            <div style={{ display: "inline-block" }}>
+              Your goal to burn daliy is {this.state.dailyGoal} Calories
+              <i
+                className="fa fa-pencil-square-o ml-2"
+                aria-hidden="true"
+                style={{ cursor: "pointer" }}
+                onClick={this.handleEdit}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="card  mb-3 ml-5 mt-5"
+          style={{
+            borderColor: "#9cd1f8",
+            width: "40%"
           }}
         >
           <div
@@ -196,6 +268,36 @@ class Exercise extends Component {
               </button>
             </div>
           </div>
+        </div>
+
+        <div
+          name="show records"
+          id="right"
+          style={{
+            borderColor: "#9cd1f8"
+          }}
+        >
+          <table className="table  table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Time</th>
+                <th scope="col">Workout</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Calorie</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.records.map(record => (
+                <tr key={record.id}>
+                  <td>{record.time}</td>
+                  <td>{record.workout}</td>
+                  <td>{record.duration}</td>
+                  <td>{record.calorieBurned}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </React.Fragment>
     );

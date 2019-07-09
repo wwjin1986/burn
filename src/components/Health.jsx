@@ -101,7 +101,8 @@ class Health extends Component {
         name: "Weiwei",
         weight: newWeight,
         height: 160,
-        age: 33
+        age: 33,
+        dailyGoal: 500
       });
       fetchPostAPI(config.apiEndPoint + "/profiles", "POST", body2);
 
