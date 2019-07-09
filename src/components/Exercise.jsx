@@ -13,7 +13,9 @@ class Exercise extends Component {
     duration: 0,
     todayTotal: 0,
     records: [],
-    dailyGoal: 300
+    dailyGoal: 300,
+    show: "collapse",
+    newDailyGoal: 0
   };
   async componentDidMount() {
     this.setState({
@@ -21,6 +23,9 @@ class Exercise extends Component {
         config.apiEndPoint + "/calories/2019-7-10/total"
       )
     });
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
+      this.setState({ dailyGoal: data.dailyGoal })
+    );
     this.setState({
       records: await fetchGetAPI(config.apiEndPoint + "/calories/2019-7-10")
     });
@@ -90,6 +95,7 @@ class Exercise extends Component {
   };
 
   handleSubmit = async () => {
+    //submit new exercise
     let time = new Date();
     //date in format "2019-7-9"
     let date =
@@ -109,6 +115,32 @@ class Exercise extends Component {
       )
     });
   };
+
+  handleCancel = () => {
+    this.setState({ show: "collapse" });
+  };
+
+  handleEdit = () => {
+    this.setState({
+      show: this.state.show === "collapse" ? "collapse show" : "collapse"
+    });
+  };
+
+  handleChangeDailyGoal = event => {
+    this.setState({ newDailyGoal: event.target.value });
+  };
+  handleSave = async () => {
+    //save new daily goal
+    let newDailyGoal = this.state.newDailyGoal;
+    await fetchPostAPI(
+      config.apiEndPoint + "/profiles/Weiwei/" + newDailyGoal,
+      "POST",
+      {}
+    );
+    this.setState({ dailyGoal: this.state.newDailyGoal });
+  };
+
+  handleDelete = () => {};
   render() {
     const colors = [
       "running",
@@ -124,7 +156,8 @@ class Exercise extends Component {
           className="card  mb-3 ml-5 mt-5"
           style={{
             borderColor: "#9cd1f8",
-            display: "inline-block"
+            display: "inline-block",
+            width: "40%"
           }}
         >
           <div
@@ -138,7 +171,7 @@ class Exercise extends Component {
             <span>{this.state.todayTotal} Caloreis Burned</span>
             <div className="progress">
               <div
-                className="progress-bar progress-bar-striped"
+                className="progress-bar progress-bar-striped bg-success"
                 role="progressbar"
                 style={{
                   width:
@@ -166,12 +199,46 @@ class Exercise extends Component {
           >
             <div style={{ display: "inline-block" }}>
               Your goal to burn daliy is {this.state.dailyGoal} Calories
-              <i
+              <i //button to edit the daily dailyGoal
                 className="fa fa-pencil-square-o ml-2"
                 aria-hidden="true"
                 style={{ cursor: "pointer" }}
                 onClick={this.handleEdit}
               />
+              <div //div to show the form of editing dailyGoal
+                className={this.state.show}
+                id="collapseExample"
+              >
+                <div className="card card-body">
+                  <div className="row">
+                    <div className="col-8">
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="Enter your daily goal"
+                        step="2.5"
+                        className="mb-2"
+                        onChange={this.handleChangeDailyGoal}
+                      />
+                    </div>
+                    <div className="col-4">Calories </div>
+                  </div>
+                  <div className="row ">
+                    <button
+                      className="btn btn-sm ml-3 btn-outline-secondary"
+                      onClick={this.handleSave}
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={this.handleCancel}
+                      className="btn btn-sm ml-3 btn-outline-secondary"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -272,7 +339,7 @@ class Exercise extends Component {
 
         <div
           name="show records"
-          id="right"
+          id="left"
           style={{
             borderColor: "#9cd1f8"
           }}
@@ -294,6 +361,16 @@ class Exercise extends Component {
                   <td>{record.workout}</td>
                   <td>{record.duration}</td>
                   <td>{record.calorieBurned}</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-secondary"
+                      name={record.id}
+                      onClick={this.handleDelete}
+                    >
+                      <i className="fa fa-trash-o" aria-hidden="true" />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

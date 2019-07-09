@@ -240,6 +240,7 @@ class Health extends Component {
                       <div className="col-9">
                         <input
                           type="number"
+                          min="0"
                           placeholder="Enter new weight here"
                           step="2.5"
                           className="mb-2"
