@@ -54,9 +54,7 @@ class Exercise extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data.exercises[0]);
-
-        this.setState({ calorie: data.exercises[0].nf_calories });
+        this.setState({ calorie: Math.round(data.exercises[0].nf_calories) });
       }); // parses JSON response into native Javascript objects
   };
   handleSelectExercise(value) {
@@ -102,17 +100,21 @@ class Exercise extends Component {
       time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
     let workout = this.state.value;
     let calorieBurned = this.state.calorie;
+    let duration = this.state.duration;
+    if (this.state.time === "hours") duration = duration * 60;
     let body = JSON.stringify({
       time: time.toLocaleString(),
       calorieBurned: calorieBurned,
       workout: workout,
-      date: "2019-7-10"
+      date: "2019-7-10",
+      duration: duration
     });
     await fetchPostAPI(config.apiEndPoint + "/calorie/", "POST", body);
     this.setState({
       todayTotal: await fetchGetAPI(
         config.apiEndPoint + "/calories/2019-7-10/total"
-      )
+      ),
+      records: await fetchGetAPI(config.apiEndPoint + "/calories/2019-7-10/")
     });
   };
 
@@ -140,7 +142,16 @@ class Exercise extends Component {
     this.setState({ dailyGoal: this.state.newDailyGoal });
   };
 
-  handleDelete = () => {};
+  handleDelete = async event => {
+    await fetchDeleteAPI(
+      config.apiEndPoint +
+        "/profiles/Weiwei/calories/" +
+        event.currentTarget.name
+    );
+    this.setState({
+      records: await fetchGetAPI(config.apiEndPoint + "/calories/2019-7-10")
+    });
+  };
   render() {
     const colors = [
       "running",
@@ -315,7 +326,10 @@ class Exercise extends Component {
                 <span>
                   I did {this.state.duration} {this.state.time}{" "}
                   {this.state.value}. <br />
-                  Total calories estimated: {this.state.calorie} Calories.
+                  Total calories estimated: {Math.round(
+                    this.state.calorie
+                  )}{" "}
+                  Calories.
                 </span>
               )}
             </div>
@@ -349,8 +363,8 @@ class Exercise extends Component {
               <tr>
                 <th scope="col">Time</th>
                 <th scope="col">Workout</th>
-                <th scope="col">Duration</th>
-                <th scope="col">Calorie</th>
+                <th scope="col">Duration/minutes</th>
+                <th scope="col">Calories</th>
                 <th scope="col">Delete</th>
               </tr>
             </thead>
