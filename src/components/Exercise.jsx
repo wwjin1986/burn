@@ -4,6 +4,7 @@ import fetchPostAPI from "./commons/fetchPostAPI";
 import fetchGetAPI from "./commons/fetchGetAPI";
 import config from "./config.json";
 import fetchDeleteAPI from "./commons/fetchDeleteAPI";
+import todayDate from "./commons/Time";
 class Exercise extends Component {
   state = {
     exercise: "run",
@@ -17,17 +18,18 @@ class Exercise extends Component {
     show: "collapse",
     newDailyGoal: 0
   };
+  date = todayDate("yyyy-mm-dd");
   async componentDidMount() {
     this.setState({
       todayTotal: await fetchGetAPI(
-        config.apiEndPoint + "/calories/2019-7-10/total"
+        config.apiEndPoint + "/calories/" + this.date + "/total"
       )
     });
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
       this.setState({ dailyGoal: data.dailyGoal })
     );
     this.setState({
-      records: await fetchGetAPI(config.apiEndPoint + "/calories/2019-7-10")
+      records: await fetchGetAPI(config.apiEndPoint + "/calories/" + this.date)
     });
   }
   fetchCalorie = async query => {
@@ -93,11 +95,7 @@ class Exercise extends Component {
   };
 
   handleSubmit = async () => {
-    //submit new exercise
     let time = new Date();
-    //date in format "2019-7-9"
-    let date =
-      time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
     let workout = this.state.value;
     let calorieBurned = this.state.calorie;
     let duration = this.state.duration;
@@ -106,15 +104,15 @@ class Exercise extends Component {
       time: time.toLocaleString(),
       calorieBurned: calorieBurned,
       workout: workout,
-      date: "2019-7-10",
+      date: this.date,
       duration: duration
     });
     await fetchPostAPI(config.apiEndPoint + "/calorie/", "POST", body);
     this.setState({
       todayTotal: await fetchGetAPI(
-        config.apiEndPoint + "/calories/2019-7-10/total"
+        config.apiEndPoint + "/calories/" + this.date + "/total"
       ),
-      records: await fetchGetAPI(config.apiEndPoint + "/calories/2019-7-10/")
+      records: await fetchGetAPI(config.apiEndPoint + "/calories/" + this.date)
     });
   };
 
@@ -149,7 +147,10 @@ class Exercise extends Component {
         event.currentTarget.name
     );
     this.setState({
-      records: await fetchGetAPI(config.apiEndPoint + "/calories/2019-7-10")
+      records: await fetchGetAPI(config.apiEndPoint + "/calories/" + this.date),
+      todayTotal: await fetchGetAPI(
+        config.apiEndPoint + "/calories/" + this.date + "/total"
+      )
     });
   };
   render() {
