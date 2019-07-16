@@ -24,8 +24,23 @@ class NavBar extends Component {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <Link className="nav-link" to="/home">
-                Home
+              <Link className="nav-link" to="/today">
+                Today
+              </Link>
+            </li>
+            <li className="nav-item active">
+              <Link className="nav-link" to="/addexercise">
+                Exercises
+              </Link>
+            </li>
+            <li className="nav-item active">
+              <Link className="nav-link" to="/addweight">
+                Weights
+              </Link>
+            </li>
+            <li className="nav-item active">
+              <Link className="nav-link" to="/addweight">
+                Plans
               </Link>
             </li>
             <li className="nav-item active">

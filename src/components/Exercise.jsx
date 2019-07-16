@@ -7,9 +7,8 @@ import fetchDeleteAPI from "./commons/fetchDeleteAPI";
 import todayDate from "./commons/Time";
 class Exercise extends Component {
   state = {
-    exercise: "run",
     calorie: 10,
-    value: "running",
+    workout: "running",
     time: "minutes",
     duration: 0,
     todayTotal: 0,
@@ -19,6 +18,7 @@ class Exercise extends Component {
     newDailyGoal: 0
   };
   date = todayDate("yyyy-mm-dd");
+
   async componentDidMount() {
     this.setState({
       todayTotal: await fetchGetAPI(
@@ -33,6 +33,7 @@ class Exercise extends Component {
     });
   }
   fetchCalorie = async query => {
+    //fetch calories burned based on profile and workout info
     await fetch("https://trackapi.nutritionix.com/v2/natural/exercise", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, cors, *same-origin
@@ -59,14 +60,14 @@ class Exercise extends Component {
         this.setState({ calorie: Math.round(data.exercises[0].nf_calories) });
       }); // parses JSON response into native Javascript objects
   };
-  handleSelectExercise(value) {
-    this.setState({ value: value });
+  handleSelectExercise(workout) {
+    this.setState({ workout: workout });
     if (this.state.duration > 0) {
       let duration = this.state.duration;
       if (this.state.time === "hours") {
         duration = 60 * duration;
       }
-      let query = value + " " + duration + " " + "minutes";
+      let query = workout + " " + duration + " " + "minutes";
       this.fetchCalorie(query);
     }
     //call back function to get the updated value for console
@@ -79,7 +80,7 @@ class Exercise extends Component {
         duration = 60 * duration;
       }
 
-      let query = this.state.value + " " + duration + " " + "minutes";
+      let query = this.state.workout + " " + duration + " " + "minutes";
       this.fetchCalorie(query);
     }
   };
@@ -90,13 +91,13 @@ class Exercise extends Component {
     if (this.state.time === "hours") {
       duration = 60 * event.target.value;
     }
-    let query = this.state.value + " " + duration + " " + "minutes";
+    let query = this.state.workout + " " + duration + " " + "minutes";
     this.fetchCalorie(query);
   };
 
   handleSubmit = async () => {
     let time = new Date();
-    let workout = this.state.value;
+    let workout = this.state.workout;
     let calorieBurned = this.state.calorie;
     let duration = this.state.duration;
     if (this.state.time === "hours") duration = duration * 60;
@@ -116,43 +117,6 @@ class Exercise extends Component {
     });
   };
 
-  handleCancel = () => {
-    this.setState({ show: "collapse" });
-  };
-
-  handleEdit = () => {
-    this.setState({
-      show: this.state.show === "collapse" ? "collapse show" : "collapse"
-    });
-  };
-
-  handleChangeDailyGoal = event => {
-    this.setState({ newDailyGoal: event.target.value });
-  };
-  handleSave = async () => {
-    //save new daily goal
-    let newDailyGoal = this.state.newDailyGoal;
-    await fetchPostAPI(
-      config.apiEndPoint + "/profiles/Weiwei/" + newDailyGoal,
-      "POST",
-      {}
-    );
-    this.setState({ dailyGoal: this.state.newDailyGoal });
-  };
-
-  handleDelete = async event => {
-    await fetchDeleteAPI(
-      config.apiEndPoint +
-        "/profiles/Weiwei/calories/" +
-        event.currentTarget.name
-    );
-    this.setState({
-      records: await fetchGetAPI(config.apiEndPoint + "/calories/" + this.date),
-      todayTotal: await fetchGetAPI(
-        config.apiEndPoint + "/calories/" + this.date + "/total"
-      )
-    });
-  };
   render() {
     const colors = [
       "running",
@@ -160,100 +124,11 @@ class Exercise extends Component {
       "hiit",
       "cardio",
       "yoga",
-      "elliptial"
+      "elliptial",
+      "weight"
     ];
     return (
       <React.Fragment>
-        <div
-          className="card  mb-3 ml-5 mt-5"
-          style={{
-            borderColor: "#9cd1f8",
-            display: "inline-block",
-            width: "40%"
-          }}
-        >
-          <div
-            className="card-header bg-transparent"
-            style={{ borderColor: "#9cd1f8" }}
-          >
-            <h5>Today's Workout</h5>
-          </div>
-          <div className="card-body ">
-            {" "}
-            <span>{this.state.todayTotal} Caloreis Burned</span>
-            <div className="progress">
-              <div
-                className="progress-bar progress-bar-striped bg-success"
-                role="progressbar"
-                style={{
-                  width:
-                    this.state.todayTotal / this.state.dailyGoal >= 1
-                      ? "100%"
-                      : Math.round(
-                          (this.state.todayTotal / this.state.dailyGoal) * 100
-                        ) + "%"
-                }}
-                aria-valuenow={this.state.todayTotal}
-                aria-valuemin="0"
-                aria-valuemax={this.state.dailyGoal}
-              >
-                {this.state.todayTotal / this.state.dailyGoal >= 1
-                  ? "100%"
-                  : Math.round(
-                      (this.state.todayTotal / this.state.dailyGoal) * 100
-                    ) + " %"}
-              </div>
-            </div>
-          </div>
-          <div
-            className="card-footer bg-transparent"
-            style={{ borderColor: "#9cd1f8" }}
-          >
-            <div style={{ display: "inline-block" }}>
-              Your goal to burn daliy is {this.state.dailyGoal} Calories
-              <i //button to edit the daily dailyGoal
-                className="fa fa-pencil-square-o ml-2"
-                aria-hidden="true"
-                style={{ cursor: "pointer" }}
-                onClick={this.handleEdit}
-              />
-              <div //div to show the form of editing dailyGoal
-                className={this.state.show}
-                id="collapseExample"
-              >
-                <div className="card card-body">
-                  <div className="row">
-                    <div className="col-8">
-                      <input
-                        type="number"
-                        min="0"
-                        placeholder="Enter your daily goal"
-                        step="2.5"
-                        className="mb-2"
-                        onChange={this.handleChangeDailyGoal}
-                      />
-                    </div>
-                    <div className="col-4">Calories </div>
-                  </div>
-                  <div className="row ">
-                    <button
-                      className="btn btn-sm ml-3 btn-outline-secondary"
-                      onClick={this.handleSave}
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={this.handleCancel}
-                      className="btn btn-sm ml-3 btn-outline-secondary"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div
           className="card  mb-3 ml-5 mt-5"
           style={{
@@ -326,7 +201,7 @@ class Exercise extends Component {
               {this.state.duration > 0 && (
                 <span>
                   I did {this.state.duration} {this.state.time}{" "}
-                  {this.state.value}. <br />
+                  {this.state.workout}. <br />
                   Total calories estimated: {Math.round(
                     this.state.calorie
                   )}{" "}
