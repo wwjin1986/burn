@@ -17,6 +17,7 @@ import {
 class Health extends Component {
   state = {
     height: 160,
+    heightincm: 160,
     weight: 55,
     age: 33,
     unit: "kg",
@@ -32,7 +33,7 @@ class Health extends Component {
       this.setState({ weight: data.weight })
     );
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ height: data.height })
+      this.setState({ height: data.height, heightincm: data.height })
     );
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
       this.setState({ age: data.age })
@@ -317,8 +318,8 @@ class Health extends Component {
                     <td>
                       {Math.round(
                         (record.weight * 100000) /
-                          this.state.height /
-                          this.state.height
+                          this.state.heightincm /
+                          this.state.heightincm
                       ) / 10}
                     </td>
                     <td>
