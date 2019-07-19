@@ -50,14 +50,14 @@ label > span {
 }
 
 #left {
-  margin-left: 50px;
-  width: 40%;
+  margin-left: 15%;
+  width: 35%;
   display: inline-block;
   float: left;
 }
 #right {
-  margin-left: 10px;
-  width: 40%;
+  margin-right: 15%;
+  width: 35%;
   display: inline-block;
 }
 #centered {

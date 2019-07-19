@@ -9,8 +9,10 @@ class Today extends Component {
     todayTotal: 0,
     records: [],
     dailyGoal: 300,
-    show: "collapse",
-    newDailyGoal: 0
+    showGoalForm: "collapse",
+    showWeightForm: "collapse",
+    newDailyGoal: 0,
+    unit: "kg"
   };
   date = todayDate("yyyy-mm-dd");
 
@@ -26,17 +28,35 @@ class Today extends Component {
     this.setState({
       records: await fetchGetAPI(config.apiEndPoint + "/calories/" + this.date)
     });
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
+      this.setState({ weight: data.weight })
+    );
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
+      this.setState({ height: data.height, heightincm: data.height })
+    );
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
+      this.setState({ age: data.age })
+    );
+    fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
+      this.setState({ weights: data })
+    );
   }
   handleCancel = () => {
-    this.setState({ show: "collapse" });
+    this.setState({ showGoalForm: "collapse", showWeightForm: "collapse" });
   };
 
-  handleEdit = () => {
+  handleEditWeight = () => {
     this.setState({
-      show: this.state.show === "collapse" ? "collapse show" : "collapse"
+      showWeightForm:
+        this.state.showWeightForm === "collapse" ? "collapse show" : "collapse"
     });
   };
-
+  handleEditGoal = () => {
+    this.setState({
+      showGoalForm:
+        this.state.showGoalForm === "collapse" ? "collapse show" : "collapse"
+    });
+  };
   handleChangeDailyGoal = event => {
     this.setState({ newDailyGoal: event.target.value });
   };
@@ -63,6 +83,22 @@ class Today extends Component {
         config.apiEndPoint + "/calories/" + this.date + "/total"
       )
     });
+  };
+
+  handleSelectMeter = event => {
+    this.setState({ unit: event.target.name });
+
+    //lb/ft -> kg/cm
+    if (event.target.name === "kg")
+      this.setState({
+        weight: Math.round(this.state.weight * 0.45359237),
+        height: Math.round(this.state.height * 30.48 * 10) / 10
+      });
+    else
+      this.setState({
+        weight: Math.round(this.state.weight * 2.20462262185),
+        height: Math.round(this.state.height * 0.0328084 * 100) / 100
+      });
   };
   render() {
     return (
@@ -130,10 +166,10 @@ class Today extends Component {
                   className="fa fa-pencil-square-o ml-2"
                   aria-hidden="true"
                   style={{ cursor: "pointer" }}
-                  onClick={this.handleEdit}
+                  onClick={this.handleEditWeight}
                 />
 
-                <div className={this.state.show} id="collapseExample">
+                <div className={this.state.showWeightForm} id="collapseExample">
                   <div className="card card-body">
                     <div className="row">
                       <div className="col-9">
@@ -177,7 +213,7 @@ class Today extends Component {
             </div>
             <div className="row">
               <div className="col-3 ml-5">Age</div>
-              <div className="col-7">{this.state.age}</div>
+              <div className="col-7">{this.state.age} y</div>
             </div>
           </div>
 
@@ -185,16 +221,7 @@ class Today extends Component {
             className="card-footer bg-transparent"
             style={{ borderColor: "#9cd1f8" }}
           >
-            <div style={{ display: "inline-block" }} />
-            <div style={{ display: "inline-block" }}>
-              <button
-                type="button"
-                className="btn btn-sm ml-2"
-                style={{ backgroundColor: "#9cd1f8", color: "white" }}
-              >
-                Edit
-              </button>
-            </div>
+            <div> Your Weight Goal is 50 kg, you need to lose 30 kg</div>
           </div>
         </div>
         <div
@@ -248,10 +275,10 @@ class Today extends Component {
                 className="fa fa-pencil-square-o ml-2"
                 aria-hidden="true"
                 style={{ cursor: "pointer" }}
-                onClick={this.handleEdit}
+                onClick={this.handleEditGoal}
               />
               <div //div to show the form of editing dailyGoal
-                className={this.state.show}
+                className={this.state.showGoalForm}
                 id="collapseExample"
               >
                 <div className="card card-body">
@@ -299,6 +326,9 @@ class Today extends Component {
         >
           <table className="table  table-hover">
             <thead>
+              <tr>
+                <th colSpan="5">Today's exercise records</th>
+              </tr>
               <tr>
                 <th scope="col">Time</th>
                 <th scope="col">Workout</th>

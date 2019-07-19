@@ -11,7 +11,8 @@ import {
   CartesianGrid,
   Tooltip,
   Label,
-  Legend
+  Legend,
+  ReferenceLine
 } from "recharts";
 
 class Health extends Component {
@@ -300,65 +301,81 @@ class Health extends Component {
             </div>
           </div>
         </div>
-        <div>
-          <div name="show records" id="left">
-            <table className="table  table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">Time</th>
-                  <th scope="col">Weight</th>
-                  <th scope="col">BMI</th>
-                  <th scope="col">Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.weights.map(record => (
-                  <tr key={record.id}>
-                    <td>{record.time}</td>
-                    <td>{record.weight} Kg</td>
-                    <td>
-                      {Math.round(
-                        (record.weight * 100000) /
-                          this.state.heightincm /
-                          this.state.heightincm
-                      ) / 10}
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-outline-secondary"
-                        name={record.id}
-                        onClick={this.handleDelete}
-                      >
-                        <i className="fa fa-trash-o" aria-hidden="true" />
-                      </button>
-                    </td>
+        <div id="centered">
+          <div>
+            <div name="show records" id="left">
+              <table className="table  table-hover">
+                <thead>
+                  <tr>
+                    <th colSpan="4">Your Weight Records</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div id="right">
-            <LineChart width={500} height={300} data={this.state.weights}>
-              <XAxis dataKey="time">
-                <Label value="Date" offset={0} position="insideBottom" />
-              </XAxis>
-              <YAxis
-                dataKey="weight"
-                label={{ value: "weight", angle: -90, position: "insideLeft" }}
-              />
-              <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-              <Legend verticalAlign="top" height={36} />
+                  <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">BMI</th>
+                    <th scope="col">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.weights.map(record => (
+                    <tr key={record.id}>
+                      <td>{record.time}</td>
+                      <td>{record.weight} Kg</td>
+                      <td>
+                        {Math.round(
+                          (record.weight * 100000) /
+                            this.state.heightincm /
+                            this.state.heightincm
+                        ) / 10}
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-secondary"
+                          name={record.id}
+                          onClick={this.handleDelete}
+                        >
+                          <i className="fa fa-trash-o" aria-hidden="true" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div id="right">
+              <LineChart width={500} height={300} data={this.state.weights}>
+                <XAxis dataKey="time">
+                  <Label value="Date" offset={0} position="insideBottom" />
+                </XAxis>
+                <YAxis
+                  dataKey="weight"
+                  label={{
+                    value: "weight",
+                    angle: -90,
+                    position: "insideLeft"
+                  }}
+                />
+                <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                <Legend verticalAlign="top" height={36} />
 
-              <Line
-                name="weight records"
-                type="monotone"
-                dataKey="weight"
-                stroke="#82ca9d"
-              />
+                <Line
+                  name="weight records"
+                  type="monotone"
+                  dataKey="weight"
+                  stroke="#82ca9d"
+                />
 
-              <Tooltip />
-            </LineChart>
+                <ReferenceLine y={60} stroke="green" strokeDasharray="3 3">
+                  <Label
+                    value="weight goal"
+                    offset={2}
+                    position="insideRight"
+                  />
+                </ReferenceLine>
+                <Tooltip />
+              </LineChart>
+            </div>
           </div>
         </div>
       </React.Fragment>

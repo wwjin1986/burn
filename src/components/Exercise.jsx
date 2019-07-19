@@ -239,6 +239,9 @@ class Exercise extends Component {
           <table className="table  table-hover">
             <thead>
               <tr>
+                <th colSpan="5">Today's Exercise Records</th>
+              </tr>
+              <tr>
                 <th scope="col">Time</th>
                 <th scope="col">Workout</th>
                 <th scope="col">Duration/minutes</th>
