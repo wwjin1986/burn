@@ -130,7 +130,8 @@ class Exercise extends Component {
     return (
       <React.Fragment>
         <div
-          className="card  mb-3 ml-5 mt-5"
+          className="card  mb-3  mt-5"
+          id="centered"
           style={{
             borderColor: "#9cd1f8",
             width: "40%"
@@ -229,9 +230,10 @@ class Exercise extends Component {
 
         <div
           name="show records"
-          id="left"
+          id="centered"
           style={{
-            borderColor: "#9cd1f8"
+            borderColor: "#9cd1f8",
+            width: "40%"
           }}
         >
           <table className="table  table-hover">

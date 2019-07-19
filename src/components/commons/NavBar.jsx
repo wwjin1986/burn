@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import config from "../config.json";
 class NavBar extends Component {
   render() {
     return (
@@ -24,27 +25,27 @@ class NavBar extends Component {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <Link className="nav-link" to="/today">
+              <Link className="nav-link" to={"/today"}>
                 Today
               </Link>
             </li>
             <li className="nav-item active">
-              <Link className="nav-link" to="/addexercise">
+              <Link className="nav-link" to={"/addexercise"}>
                 Exercises
               </Link>
             </li>
             <li className="nav-item active">
-              <Link className="nav-link" to="/addweight">
+              <Link className="nav-link" to={"/addweight"}>
                 Weights
               </Link>
             </li>
             <li className="nav-item active">
-              <Link className="nav-link" to="/addweight">
+              <Link className="nav-link" to={"/planner"}>
                 Plans
               </Link>
             </li>
             <li className="nav-item active">
-              <Link className="nav-link" to="/profile">
+              <Link className="nav-link" to={"/profile"}>
                 Profile
               </Link>
             </li>

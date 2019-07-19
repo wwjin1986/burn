@@ -171,7 +171,8 @@ class Health extends Component {
           </button>{" "}
         </div>
         <div
-          className="card  mb-3 ml-5 "
+          className="card  mb-3  "
+          id="centered"
           style={{
             borderColor: "#9cd1f8",
             width: "40%"

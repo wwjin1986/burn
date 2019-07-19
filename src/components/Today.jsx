@@ -6,10 +6,6 @@ import fetchDeleteAPI from "./commons/fetchDeleteAPI";
 import todayDate from "./commons/Time";
 class Today extends Component {
   state = {
-    calorie: 10,
-    workout: "running",
-    time: "minutes",
-    duration: 0,
     todayTotal: 0,
     records: [],
     dailyGoal: 300,
@@ -72,7 +68,138 @@ class Today extends Component {
     return (
       <React.Fragment>
         <div
-          className="card  mb-3 ml-5 mt-5"
+          id="centered"
+          className="card  mb-3 mt-5"
+          style={{
+            borderColor: "#9cd1f8",
+            width: "40%"
+          }}
+        >
+          <div
+            className="card-header bg-transparent"
+            style={{ borderColor: "#9cd1f8" }}
+          >
+            <div style={{ display: "inline-block" }}>
+              <h5>Weiwei's Personal Profile</h5>
+            </div>
+            <div
+              className="btn-group btn-group-toggle btn-sm"
+              data-toggle="button"
+              style={{ display: "inline-block" }}
+            >
+              <label
+                className={
+                  this.state.unit === "kg"
+                    ? "btn btn-sm btn-outline-secondary active"
+                    : "btn btn-sm btn-outline-secondary"
+                }
+              >
+                <input
+                  type="radio"
+                  name="kg"
+                  checked={this.state.unit === "kg"}
+                  onChange={this.handleSelectMeter}
+                />
+                cm/kg
+              </label>
+              <label
+                className={
+                  this.state.unit === "lb"
+                    ? "btn btn-sm btn-outline-secondary active"
+                    : "btn btn-sm btn-outline-secondary"
+                }
+              >
+                <input
+                  type="radio"
+                  name="lb"
+                  checked={this.state.unit === "lb"}
+                  onChange={this.handleSelectMeter}
+                />
+                ft/lb
+              </label>
+            </div>
+          </div>
+          <div className="card-body">
+            <div className="row">
+              <div className="col-3 ml-5">Weight</div>
+              <div className="col-7">
+                {this.state.weight}
+                {this.state.unit === "kg" ? " kg" : " lb"}
+
+                <i
+                  className="fa fa-pencil-square-o ml-2"
+                  aria-hidden="true"
+                  style={{ cursor: "pointer" }}
+                  onClick={this.handleEdit}
+                />
+
+                <div className={this.state.show} id="collapseExample">
+                  <div className="card card-body">
+                    <div className="row">
+                      <div className="col-9">
+                        <input
+                          type="number"
+                          min="0"
+                          placeholder="Enter new weight here"
+                          step="2.5"
+                          className="mb-2"
+                          onChange={this.handleNewWeightInput}
+                        />
+                      </div>
+                      <div className="col-3">
+                        {this.state.unit === "kg" ? " kg" : " lb"}
+                      </div>
+                    </div>
+                    <div className="row ">
+                      <button
+                        className="btn btn-sm ml-3 btn-outline-secondary"
+                        onClick={this.handleAddWeight}
+                      >
+                        Add new weight
+                      </button>
+                      <button
+                        onClick={this.handleCancel}
+                        className="btn btn-sm ml-3 btn-outline-secondary"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-3 ml-5">Height</div>
+              <div className="col-7">
+                {this.state.height}
+                {this.state.unit === "kg" ? "cm" : "ft"}
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-3 ml-5">Age</div>
+              <div className="col-7">{this.state.age}</div>
+            </div>
+          </div>
+
+          <div
+            className="card-footer bg-transparent"
+            style={{ borderColor: "#9cd1f8" }}
+          >
+            <div style={{ display: "inline-block" }} />
+            <div style={{ display: "inline-block" }}>
+              <button
+                type="button"
+                className="btn btn-sm ml-2"
+                style={{ backgroundColor: "#9cd1f8", color: "white" }}
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          id="centered"
+          className="card  mb-3  mt-5"
           style={{
             borderColor: "#9cd1f8",
             width: "40%"
@@ -86,7 +213,6 @@ class Today extends Component {
             {this.date}
           </div>
           <div className="card-body ">
-            {" "}
             <span>{this.state.todayTotal} Caloreis Burned</span>
             <div className="progress">
               <div
@@ -163,8 +289,9 @@ class Today extends Component {
         </div>
 
         <div
+          id="centered"
           name="show records"
-          className="mb-3 ml-5 mt-5"
+          className="mb-3  mt-5"
           style={{
             borderColor: "#9cd1f8",
             width: "40%"

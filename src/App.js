@@ -6,7 +6,8 @@ import Exercise from "./components/Exercise";
 import Health from "./components/Health";
 import Today from "./components/Today";
 import { Route, Switch } from "react-router-dom";
-
+import config from "./components/config.json";
+import Planner from "./components/Planner";
 function App() {
   return (
     <React.Fragment>
@@ -18,6 +19,8 @@ function App() {
           <Route path="/addweight" component={Health} />
 
           <Route path="/profile" component={Health} />
+          <Route path="/planner" component={Planner} />
+
           <Route path="/" component={Today} />
         </Switch>
       </div>
