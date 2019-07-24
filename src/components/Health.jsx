@@ -25,8 +25,7 @@ class Health extends Component {
     show: "collapse",
     newWeight: 0,
     showAlert: "alert alert-success alert-dismissible fade",
-    showInfo: "",
-    weights: []
+    showInfo: ""
   };
 
   async componentDidMount() {
@@ -38,9 +37,6 @@ class Health extends Component {
     );
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
       this.setState({ age: data.age })
-    );
-    fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
-      this.setState({ weights: data })
     );
   }
 
@@ -58,98 +54,6 @@ class Health extends Component {
         weight: Math.round(this.state.weight * 2.20462262185),
         height: Math.round(this.state.height * 0.0328084 * 100) / 100
       });
-  };
-  handleEdit = () => {
-    //collapse div to add new weight
-    this.setState({
-      show: this.state.show === "collapse" ? "collapse show" : "collapse"
-    });
-  };
-  handleCancel = () => {
-    this.setState({ show: "collapse" });
-  };
-  handleNewWeightInput = event => {
-    this.setState({ newWeight: event.target.value });
-  };
-  handleAddWeight = async () => {
-    if (this.state.newWeight > 0) {
-      let newWeight = this.state.newWeight;
-      let time = new Date();
-      console.log(time);
-
-      //update weight records,convert to kg first. Weights stored in unit kg
-      if (this.state.unit === "lb")
-        newWeight = Math.round(this.state.newWeight * 0.45359237);
-
-      let body = JSON.stringify({
-        name: "Weiwei",
-        weight: newWeight,
-        time: time.toLocaleString()
-      });
-
-      await fetchPostAPI(config.apiEndPoint + "/profiles/Weiwei", "POST", body);
-      fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(
-        data => {
-          this.setState({
-            weights: data,
-            showAlert: "alert alert-success alert-dismissible fade show"
-          });
-          console.log(data);
-        }
-      );
-
-      //update profile
-      let body2 = JSON.stringify({
-        name: "Weiwei",
-        weight: newWeight,
-        height: 160,
-        age: 33,
-        dailyGoal: 500
-      });
-      fetchPostAPI(config.apiEndPoint + "/profiles", "POST", body2);
-
-      //update alert infomation
-      if (this.state.newWeight > this.state.weight) {
-        this.setState({
-          showInfo:
-            "Succeed! Your new weight is " +
-            this.state.newWeight +
-            " " +
-            this.state.unit +
-            ". You gained " +
-            (this.state.newWeight - this.state.weight) +
-            " " +
-            this.state.unit
-        });
-      } else {
-        this.setState({
-          showInfo:
-            "Succeed! Your new weight is " +
-            this.state.newWeight +
-            " " +
-            this.state.unit +
-            ". You lost " +
-            (this.state.weight - this.state.newWeight) +
-            " " +
-            this.state.unit
-        });
-      }
-
-      this.setState({ weight: this.state.newWeight });
-    }
-  };
-
-  handleDelete = async event => {
-    //currentTarget the target that listens to event which is button instead of font awesome
-    await fetchDeleteAPI(
-      config.apiEndPoint + "/profiles/Weiwei/" + event.currentTarget.name
-    );
-    let records = fetchGetAPI(
-      config.apiEndPoint + "/profiles/weiwei/weights"
-    ).then(data => {
-      return data;
-    });
-    records.then(data => this.setState({ weights: data }));
   };
 
   render() {
@@ -184,7 +88,7 @@ class Health extends Component {
             style={{ borderColor: "#9cd1f8" }}
           >
             <div style={{ display: "inline-block" }}>
-              <h5>Weiwei's Personal Profile</h5>
+              <h5>Weiwei's Profile</h5>
             </div>
             <div
               className="btn-group btn-group-toggle btn-sm"
@@ -229,47 +133,6 @@ class Health extends Component {
               <div className="col-7">
                 {this.state.weight}
                 {this.state.unit === "kg" ? " kg" : " lb"}
-
-                <i
-                  className="fa fa-pencil-square-o ml-2"
-                  aria-hidden="true"
-                  style={{ cursor: "pointer" }}
-                  onClick={this.handleEdit}
-                />
-
-                <div className={this.state.show} id="collapseExample">
-                  <div className="card card-body">
-                    <div className="row">
-                      <div className="col-9">
-                        <input
-                          type="number"
-                          min="0"
-                          placeholder="Enter new weight here"
-                          step="2.5"
-                          className="mb-2"
-                          onChange={this.handleNewWeightInput}
-                        />
-                      </div>
-                      <div className="col-3">
-                        {this.state.unit === "kg" ? " kg" : " lb"}
-                      </div>
-                    </div>
-                    <div className="row ">
-                      <button
-                        className="btn btn-sm ml-3 btn-outline-secondary"
-                        onClick={this.handleAddWeight}
-                      >
-                        Add new weight
-                      </button>
-                      <button
-                        onClick={this.handleCancel}
-                        className="btn btn-sm ml-3 btn-outline-secondary"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
             <div className="row">
@@ -298,83 +161,6 @@ class Health extends Component {
               >
                 Edit
               </button>
-            </div>
-          </div>
-        </div>
-        <div id="centered">
-          <div>
-            <div name="show records" id="left">
-              <table className="table  table-hover">
-                <thead>
-                  <tr>
-                    <th colSpan="4">Your Weight Records</th>
-                  </tr>
-                  <tr>
-                    <th scope="col">Time</th>
-                    <th scope="col">Weight</th>
-                    <th scope="col">BMI</th>
-                    <th scope="col">Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.weights.map(record => (
-                    <tr key={record.id}>
-                      <td>{record.time}</td>
-                      <td>{record.weight} Kg</td>
-                      <td>
-                        {Math.round(
-                          (record.weight * 100000) /
-                            this.state.heightincm /
-                            this.state.heightincm
-                        ) / 10}
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-outline-secondary"
-                          name={record.id}
-                          onClick={this.handleDelete}
-                        >
-                          <i className="fa fa-trash-o" aria-hidden="true" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div id="right">
-              <LineChart width={500} height={300} data={this.state.weights}>
-                <XAxis dataKey="time">
-                  <Label value="Date" offset={0} position="insideBottom" />
-                </XAxis>
-                <YAxis
-                  dataKey="weight"
-                  label={{
-                    value: "weight",
-                    angle: -90,
-                    position: "insideLeft"
-                  }}
-                />
-                <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                <Legend verticalAlign="top" height={36} />
-
-                <Line
-                  name="weight records"
-                  type="monotone"
-                  dataKey="weight"
-                  stroke="#82ca9d"
-                />
-
-                <ReferenceLine y={60} stroke="green" strokeDasharray="3 3">
-                  <Label
-                    value="weight goal"
-                    offset={2}
-                    position="insideRight"
-                  />
-                </ReferenceLine>
-                <Tooltip />
-              </LineChart>
             </div>
           </div>
         </div>

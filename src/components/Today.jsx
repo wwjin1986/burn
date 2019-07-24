@@ -8,11 +8,13 @@ class Today extends Component {
   state = {
     todayTotal: 0,
     records: [],
-    dailyGoal: 300,
     showGoalForm: "collapse",
     showWeightForm: "collapse",
     newDailyGoal: 0,
-    unit: "kg"
+    unit: "kg",
+    weightInKG: 55,
+
+    profile: { weight: 55, height: 160, age: 33, dailyGoal: 400 }
   };
   date = todayDate("yyyy-mm-dd");
 
@@ -22,35 +24,55 @@ class Today extends Component {
         config.apiEndPoint + "/calories/" + this.date + "/total"
       )
     });
-    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ dailyGoal: data.dailyGoal })
-    );
+
     this.setState({
       records: await fetchGetAPI(config.apiEndPoint + "/calories/" + this.date)
     });
-    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ weight: data.weight })
-    );
-    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ height: data.height, heightincm: data.height })
-    );
-    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ age: data.age })
-    );
-    fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
-      this.setState({ weights: data })
-    );
+
+    //update the profile by fetching profile
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei")
+      .then(data =>
+        data
+          ? this.setState({
+              profile: data,
+              dailyGoal: data.dailyGoal,
+              weightInKG: data.weight
+            })
+          : {}
+      )
+      .catch(error => {
+        throw error;
+      });
   }
+
+  handleSelectMeter = event => {
+    this.setState({ unit: event.target.name });
+
+    //lb/ft -> kg/cm
+    if (event.target.name === "kg")
+      this.setState({
+        profile: {
+          weight: Math.round(this.state.profile.weight * 0.45359237),
+          height: Math.round(this.state.profile.height * 30.48 * 10) / 10,
+          age: this.state.profile.age,
+          dailyGoal: this.state.profile.dailyGoal
+        }
+      });
+    else
+      this.setState({
+        profile: {
+          weight: Math.round(this.state.profile.weight * 2.20462262185),
+          height: Math.round(this.state.profile.height * 0.0328084 * 100) / 100,
+          age: this.state.profile.age,
+          dailyGoal: this.state.profile.dailyGoal
+        }
+      });
+  };
+
   handleCancel = () => {
     this.setState({ showGoalForm: "collapse", showWeightForm: "collapse" });
   };
 
-  handleEditWeight = () => {
-    this.setState({
-      showWeightForm:
-        this.state.showWeightForm === "collapse" ? "collapse show" : "collapse"
-    });
-  };
   handleEditGoal = () => {
     this.setState({
       showGoalForm:
@@ -85,21 +107,6 @@ class Today extends Component {
     });
   };
 
-  handleSelectMeter = event => {
-    this.setState({ unit: event.target.name });
-
-    //lb/ft -> kg/cm
-    if (event.target.name === "kg")
-      this.setState({
-        weight: Math.round(this.state.weight * 0.45359237),
-        height: Math.round(this.state.height * 30.48 * 10) / 10
-      });
-    else
-      this.setState({
-        weight: Math.round(this.state.weight * 2.20462262185),
-        height: Math.round(this.state.height * 0.0328084 * 100) / 100
-      });
-  };
   render() {
     return (
       <React.Fragment>
@@ -116,7 +123,7 @@ class Today extends Component {
             style={{ borderColor: "#9cd1f8" }}
           >
             <div style={{ display: "inline-block" }}>
-              <h5>Weiwei's Personal Profile</h5>
+              <h5>Weiwei's Profile</h5>
             </div>
             <div
               className="btn-group btn-group-toggle btn-sm"
@@ -159,61 +166,20 @@ class Today extends Component {
             <div className="row">
               <div className="col-3 ml-5">Weight</div>
               <div className="col-7">
-                {this.state.weight}
+                {this.state.profile.weight}
                 {this.state.unit === "kg" ? " kg" : " lb"}
-
-                <i
-                  className="fa fa-pencil-square-o ml-2"
-                  aria-hidden="true"
-                  style={{ cursor: "pointer" }}
-                  onClick={this.handleEditWeight}
-                />
-
-                <div className={this.state.showWeightForm} id="collapseExample">
-                  <div className="card card-body">
-                    <div className="row">
-                      <div className="col-9">
-                        <input
-                          type="number"
-                          min="0"
-                          placeholder="Enter new weight here"
-                          step="2.5"
-                          className="mb-2"
-                          onChange={this.handleNewWeightInput}
-                        />
-                      </div>
-                      <div className="col-3">
-                        {this.state.unit === "kg" ? " kg" : " lb"}
-                      </div>
-                    </div>
-                    <div className="row ">
-                      <button
-                        className="btn btn-sm ml-3 btn-outline-secondary"
-                        onClick={this.handleAddWeight}
-                      >
-                        Add new weight
-                      </button>
-                      <button
-                        onClick={this.handleCancel}
-                        className="btn btn-sm ml-3 btn-outline-secondary"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
             <div className="row">
               <div className="col-3 ml-5">Height</div>
               <div className="col-7">
-                {this.state.height}
+                {this.state.profile.height}
                 {this.state.unit === "kg" ? "cm" : "ft"}
               </div>
             </div>
             <div className="row">
               <div className="col-3 ml-5">Age</div>
-              <div className="col-7">{this.state.age} y</div>
+              <div className="col-7">{this.state.profile.age} y</div>
             </div>
           </div>
 
@@ -221,7 +187,14 @@ class Today extends Component {
             className="card-footer bg-transparent"
             style={{ borderColor: "#9cd1f8" }}
           >
-            <div> Your Weight Goal is 50 kg, you need to lose 30 kg</div>
+            <div>
+              {" "}
+              <span>
+                Your weight goal is 60 kg. You need to{" "}
+                {this.state.weightInKG >= 60 ? "lose " : "gain "}
+                {Math.abs(this.state.weightInKG - 60)} kg
+              </span>
+            </div>
           </div>
         </div>
         <div

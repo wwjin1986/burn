@@ -13,7 +13,11 @@ class Planner extends Component {
               <th style={{ width: "15%" }} scope="col">
                 Days
               </th>
-              <th scope="col">Plans</th>
+              <th style={{ width: "55%" }} scope="col">
+                Plans
+              </th>
+              <th scope="col">Total duration</th>
+              <th scope="col">Total Calories</th>
             </tr>
           </thead>
           <tbody>
@@ -26,8 +30,9 @@ class Planner extends Component {
               onClick={() => this.handleClick("Sunday")}
             >
               <th scope="row">Sunday</th>
-
-              <td />
+              <td>HIIT 30 minutes</td>
+              <td>30</td>
+              <td>180</td>
             </tr>
             <tr
               style={{ cursor: "pointer" }}
@@ -37,7 +42,9 @@ class Planner extends Component {
               onClick={() => this.handleClick("Monday")}
             >
               <th scope="row">Monday</th>
-              <td />
+              <td>Cardio 30 minutes</td>
+              <td>30</td>
+              <td>100</td>
             </tr>
             <tr
               style={{ cursor: "pointer" }}
@@ -47,7 +54,9 @@ class Planner extends Component {
               onClick={() => this.handleClick("Tuesday")}
             >
               <th scope="row">Tuesday</th>
-              <td />
+              <td>Abs 15 minutes, Arms 15 minutes</td>
+              <td>30</td>
+              <td>60</td>
             </tr>
             <tr
               style={{ cursor: "pointer" }}
@@ -57,7 +66,9 @@ class Planner extends Component {
               onClick={() => this.handleClick("Wednesday")}
             >
               <th scope="row">Wednesday</th>
-              <td />
+              <td>Cardio 30 minutes</td>
+              <td>30</td>
+              <td>100</td>
             </tr>
             <tr
               style={{ cursor: "pointer" }}
@@ -67,7 +78,9 @@ class Planner extends Component {
               onClick={() => this.handleClick("Thursday")}
             >
               <th scope="row">Thursday</th>
-              <td />
+              <td>Running 30 minutes</td>
+              <td>30</td>
+              <td>150</td>
             </tr>
             <tr
               style={{ cursor: "pointer" }}
@@ -77,7 +90,9 @@ class Planner extends Component {
               onClick={() => this.handleClick("Friday")}
             >
               <th scope="row">Friday</th>
-              <td />
+              <td>Legs 20 minutes, Elliptical 15 minutes</td>
+              <td>45</td>
+              <td>100</td>
             </tr>
             <tr
               style={{ cursor: "pointer" }}
@@ -87,7 +102,9 @@ class Planner extends Component {
               onClick={() => this.handleClick("Saturday")}
             >
               <th scope="row">Saturday</th>
-              <td />
+              <td>Yoga 30 minutes</td>
+              <td>30</td>
+              <td>50</td>
             </tr>
           </tbody>
         </table>

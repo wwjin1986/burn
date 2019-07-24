@@ -8,9 +8,7 @@ import Today from "./components/Today";
 import { Route, Switch } from "react-router-dom";
 import config from "./components/config.json";
 import Planner from "./components/Planner";
-import fetchDeleteAPI from "./components/commons/fetchDeleteAPI";
-import fetchGetAPI from "./components/commons/fetchGetAPI";
-import fetchPostAPI from "./components/commons/fetchPostAPI";
+import Weight from "./components/Weight";
 class App extends Component {
   render() {
     return (
@@ -20,7 +18,7 @@ class App extends Component {
           <Switch>
             <Route path="/today" component={Today} />
             <Route path="/addexercise" component={Exercise} />
-            <Route path="/addweight" component={Health} />
+            <Route path="/addweight" component={Weight} />
 
             <Route path="/profile" component={Health} />
             <Route path="/planner" component={Planner} />
