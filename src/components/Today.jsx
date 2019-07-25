@@ -13,7 +13,7 @@ class Today extends Component {
     newDailyGoal: 0,
     unit: "kg",
     weightInKG: 55,
-
+    dailyGoal: 400,
     profile: { weight: 55, height: 160, age: 33, dailyGoal: 400 }
   };
   date = todayDate("yyyy-mm-dd");
@@ -32,13 +32,16 @@ class Today extends Component {
     //update the profile by fetching profile
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei")
       .then(data =>
-        data
-          ? this.setState({
-              profile: data,
-              dailyGoal: data.dailyGoal,
-              weightInKG: data.weight
-            })
-          : {}
+        data.length
+          ? this.setState(
+              {
+                profile: data,
+                dailyGoal: data.dailyGoal,
+                weightInKG: data.weight
+              },
+              () => console.log(this.state.profile.weight)
+            )
+          : console.log(this.state.profile.weight)
       )
       .catch(error => {
         throw error;
@@ -220,20 +223,23 @@ class Today extends Component {
                 role="progressbar"
                 style={{
                   width:
-                    this.state.todayTotal / this.state.dailyGoal >= 1
+                    this.state.todayTotal / this.state.profile.dailyGoal >= 1
                       ? "100%"
                       : Math.round(
-                          (this.state.todayTotal / this.state.dailyGoal) * 100
+                          (this.state.todayTotal /
+                            this.state.profile.dailyGoal) *
+                            100
                         ) + "%"
                 }}
                 aria-valuenow={this.state.todayTotal}
                 aria-valuemin="0"
-                aria-valuemax={this.state.dailyGoal}
+                aria-valuemax={this.state.profile.dailyGoal}
               >
-                {this.state.todayTotal / this.state.dailyGoal >= 1
+                {this.state.todayTotal / this.state.profile.dailyGoal >= 1
                   ? "100%"
                   : Math.round(
-                      (this.state.todayTotal / this.state.dailyGoal) * 100
+                      (this.state.todayTotal / this.state.profile.dailyGoal) *
+                        100
                     ) + " %"}
               </div>
             </div>
@@ -243,7 +249,7 @@ class Today extends Component {
             style={{ borderColor: "#9cd1f8" }}
           >
             <div style={{ display: "inline-block" }}>
-              Your goal to burn daliy is {this.state.dailyGoal} Calories
+              Your goal to burn daliy is {this.state.profile.dailyGoal} Calories
               <i //button to edit the daily dailyGoal
                 className="fa fa-pencil-square-o ml-2"
                 aria-hidden="true"

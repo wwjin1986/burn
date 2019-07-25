@@ -1,43 +1,31 @@
 import React, { Component } from "react";
-import fetchPostAPI from "./commons/fetchPostAPI";
 import fetchGetAPI from "./commons/fetchGetAPI";
 import config from "./config.json";
-import fetchDeleteAPI from "./commons/fetchDeleteAPI";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Label,
-  Legend,
-  ReferenceLine
-} from "recharts";
 
 class Health extends Component {
   state = {
-    height: 160,
     heightincm: 160,
-    weight: 55,
-    age: 33,
     unit: "kg",
-    show: "collapse",
-    newWeight: 0,
-    showAlert: "alert alert-success alert-dismissible fade",
-    showInfo: ""
+    profile: { weight: 55, height: 160, age: 33, dailyGoal: 400 }
   };
 
   async componentDidMount() {
-    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ weight: data.weight })
-    );
-    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ height: data.height, heightincm: data.height })
-    );
-    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ age: data.age })
-    );
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei")
+      .then(data =>
+        data.length
+          ? this.setState(
+              {
+                profile: data,
+                dailyGoal: data.dailyGoal,
+                weightInKG: data.weight
+              },
+              () => console.log(this.state.profile.weight)
+            )
+          : console.log(this.state.profile.weight)
+      )
+      .catch(error => {
+        throw error;
+      });
   }
 
   handleSelectMeter = event => {
@@ -46,35 +34,27 @@ class Health extends Component {
     //lb/ft -> kg/cm
     if (event.target.name === "kg")
       this.setState({
-        weight: Math.round(this.state.weight * 0.45359237),
-        height: Math.round(this.state.height * 30.48 * 10) / 10
+        profile: {
+          weight: Math.round(this.state.profile.weight * 0.45359237),
+          height: Math.round(this.state.profile.height * 30.48 * 10) / 10,
+          age: this.state.profile.age,
+          dailyGoal: this.state.profile.dailyGoal
+        }
       });
     else
       this.setState({
-        weight: Math.round(this.state.weight * 2.20462262185),
-        height: Math.round(this.state.height * 0.0328084 * 100) / 100
+        profile: {
+          weight: Math.round(this.state.profile.weight * 2.20462262185),
+          height: Math.round(this.state.profile.height * 0.0328084 * 100) / 100,
+          age: this.state.profile.age,
+          dailyGoal: this.state.profile.dailyGoal
+        }
       });
   };
 
   render() {
     return (
       <React.Fragment>
-        <div className={this.state.showAlert} role="alert">
-          {this.state.showInfo}
-          <button
-            type="button"
-            className="close"
-            data-dismiss="alert"
-            aria-label="Close"
-            onClick={() =>
-              this.setState({
-                showAlert: "alert alert-success alert-dismissible fade"
-              })
-            }
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>{" "}
-        </div>
         <div
           className="card  mb-3  "
           id="centered"
@@ -131,20 +111,20 @@ class Health extends Component {
             <div className="row">
               <div className="col-3 ml-5">Weight</div>
               <div className="col-7">
-                {this.state.weight}
+                {this.state.profile.weight}
                 {this.state.unit === "kg" ? " kg" : " lb"}
               </div>
             </div>
             <div className="row">
               <div className="col-3 ml-5">Height</div>
               <div className="col-7">
-                {this.state.height}
+                {this.state.profile.height}
                 {this.state.unit === "kg" ? "cm" : "ft"}
               </div>
             </div>
             <div className="row">
               <div className="col-3 ml-5">Age</div>
-              <div className="col-7">{this.state.age}</div>
+              <div className="col-7">{this.state.profile.age}</div>
             </div>
           </div>
 

@@ -30,9 +30,21 @@ class Weight extends Component {
   };
 
   async componentDidMount() {
-    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei").then(data =>
-      this.setState({ profile: data, weightInKG: data.weight })
-    );
+    fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei")
+      .then(data =>
+        data.length
+          ? this.setState(
+              {
+                profile: data,
+                weightInKG: data.weight
+              },
+              () => console.log(this.state.profile.weight)
+            )
+          : console.log(this.state.profile.weight)
+      )
+      .catch(error => {
+        throw error;
+      });
 
     fetchGetAPI(config.apiEndPoint + "/profiles/weiwei/weights").then(data =>
       this.setState({ weights: data })
