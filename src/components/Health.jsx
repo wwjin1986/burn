@@ -12,7 +12,7 @@ class Health extends Component {
   async componentDidMount() {
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei")
       .then(data =>
-        data.length
+        data
           ? this.setState(
               {
                 profile: data,

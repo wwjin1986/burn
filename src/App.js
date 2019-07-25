@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import "./App.css";
 import NavBar from "./components/commons/NavBar";
-import DailyCalories from "./components/DailyCalories";
 import Exercise from "./components/Exercise";
 import Health from "./components/Health";
 import Today from "./components/Today";
 import { Route, Switch } from "react-router-dom";
-import config from "./components/config.json";
 import Planner from "./components/Planner";
 import Weight from "./components/Weight";
 class App extends Component {
@@ -19,10 +17,8 @@ class App extends Component {
             <Route path="/today" component={Today} />
             <Route path="/addexercise" component={Exercise} />
             <Route path="/addweight" component={Weight} />
-
             <Route path="/profile" component={Health} />
             <Route path="/planner" component={Planner} />
-
             <Route path="/" component={Today} />
           </Switch>
         </div>

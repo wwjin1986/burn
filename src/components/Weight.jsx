@@ -18,7 +18,6 @@ import {
 class Weight extends Component {
   state = {
     heightincm: 160,
-
     weightInKG: 55,
     profile: { weight: 55, height: 160, age: 33, dailyGoal: 400 },
     unit: "kg",
@@ -32,7 +31,7 @@ class Weight extends Component {
   async componentDidMount() {
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei")
       .then(data =>
-        data.length
+        data
           ? this.setState(
               {
                 profile: data,
@@ -117,9 +116,9 @@ class Weight extends Component {
       let body2 = JSON.stringify({
         name: "Weiwei",
         weight: newWeight,
-        height: 160,
-        age: 33,
-        dailyGoal: 500
+        height: this.state.heightincm,
+        age: this.state.profile.age,
+        dailyGoal: this.state.profile.dailyGoal
       });
       fetchPostAPI(config.apiEndPoint + "/profiles", "POST", body2);
 
@@ -150,7 +149,18 @@ class Weight extends Component {
         });
       }
 
-      this.setState({ weight: this.state.newWeight });
+      this.setState({
+        profile: {
+          weight: this.state.newWeight,
+          height: this.state.profile.height,
+          age: this.state.profile.age,
+          dailyGoal: this.state.profile.dailyGoal
+        },
+        weightInKG:
+          this.state.unit === "kg"
+            ? this.state.newWeight
+            : Math.round(this.state.newWeight * 0.45359237)
+      });
     }
   };
 

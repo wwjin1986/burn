@@ -3,7 +3,6 @@ import { SelectList } from "react-widgets";
 import fetchPostAPI from "./commons/fetchPostAPI";
 import fetchGetAPI from "./commons/fetchGetAPI";
 import config from "./config.json";
-import fetchDeleteAPI from "./commons/fetchDeleteAPI";
 import todayDate from "./commons/Time";
 class Exercise extends Component {
   state = {
