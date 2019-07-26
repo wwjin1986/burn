@@ -30,19 +30,15 @@ class Today extends Component {
     });
 
     //update the profile by fetching profile
-    //to fix!!! when profile empty
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei")
       .then(data =>
-        data
-          ? this.setState(
-              {
-                profile: data,
-                dailyGoal: data.dailyGoal,
-                weightInKG: data.weight
-              },
-              () => console.log("null")
-            )
-          : console.log(data)
+        Object.keys(data).length
+          ? this.setState({
+              profile: data,
+              dailyGoal: data.dailyGoal,
+              weightInKG: data.weight
+            })
+          : {}
       )
       .catch(error => {
         throw error;

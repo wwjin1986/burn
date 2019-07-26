@@ -12,16 +12,13 @@ class Health extends Component {
   async componentDidMount() {
     fetchGetAPI(config.apiEndPoint + "/profiles/Weiwei")
       .then(data =>
-        data
-          ? this.setState(
-              {
-                profile: data,
-                dailyGoal: data.dailyGoal,
-                weightInKG: data.weight
-              },
-              () => console.log(this.state.profile.weight)
-            )
-          : console.log(this.state.profile.weight)
+        Object.keys(data).length
+          ? this.setState({
+              profile: data,
+              dailyGoal: data.dailyGoal,
+              weightInKG: data.weight
+            })
+          : {}
       )
       .catch(error => {
         throw error;
