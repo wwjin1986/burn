@@ -131,13 +131,13 @@ class Health extends Component {
           >
             <div style={{ display: "inline-block" }} />
             <div style={{ display: "inline-block" }}>
-              <button
+              {/* <button
                 type="button"
                 className="btn btn-sm ml-2"
                 style={{ backgroundColor: "#9cd1f8", color: "white" }}
               >
                 Edit
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

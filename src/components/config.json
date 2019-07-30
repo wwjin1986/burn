@@ -1,5 +1,5 @@
 {
-  "apiLocalEndPoint": "http://localhost:8080",
-  "root": "/burn",
-  "apiEndPoint": "https://rocky-earth-14230.herokuapp.com"
+  "apiEndPoint": "https://rocky-earth-14230.herokuapp.com",
+  "localApiEndPoint": "http://localhost:8080",
+  "root": "/burn"
 }

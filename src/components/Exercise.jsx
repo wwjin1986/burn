@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { SelectList } from "react-widgets";
 import fetchPostAPI from "./commons/fetchPostAPI";
 import fetchGetAPI from "./commons/fetchGetAPI";
+import fetchDeleteAPI from "./commons/fetchDeleteAPI";
 import config from "./config.json";
 import todayDate from "./commons/Time";
 class Exercise extends Component {
@@ -113,6 +114,21 @@ class Exercise extends Component {
         config.apiEndPoint + "/calories/" + this.date + "/total"
       ),
       records: await fetchGetAPI(config.apiEndPoint + "/calories/" + this.date)
+    });
+  };
+
+  handleDelete = async event => {
+    console.log(event.currentTarget.name);
+    await fetchDeleteAPI(
+      config.apiEndPoint +
+        "/profiles/Weiwei/calories/" +
+        event.currentTarget.name
+    );
+    this.setState({
+      records: await fetchGetAPI(config.apiEndPoint + "/calories/" + this.date),
+      todayTotal: await fetchGetAPI(
+        config.apiEndPoint + "/calories/" + this.date + "/total"
+      )
     });
   };
 

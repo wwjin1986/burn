@@ -94,6 +94,8 @@ class Today extends Component {
   };
 
   handleDelete = async event => {
+    console.log(event.currentTarget.name);
+
     await fetchDeleteAPI(
       config.apiEndPoint +
         "/profiles/Weiwei/calories/" +

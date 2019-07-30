@@ -7,6 +7,12 @@ import Today from "./components/Today";
 import { Route, Switch } from "react-router-dom";
 import Planner from "./components/Planner";
 import Weight from "./components/Weight";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// render the ToastContainer once in application tree
+toast.configure();
+
 class App extends Component {
   render() {
     return (
